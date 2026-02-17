@@ -14,7 +14,7 @@ Restart, then open Ubuntu from the Start menu and create your user.
 
 ```bash
 # Clone the repo inside WSL
-git clone git@github.com:nshonda/workstation-setup.git ~/workstation/personal/workstation-setup
+git clone git@github.com:<YOUR_USERNAME>/workstation-setup.git ~/workstation/personal/workstation-setup
 cd ~/workstation/personal/workstation-setup
 ./setup.sh
 ```

@@ -45,12 +45,12 @@ echo ""
 echo "--- Credentials ---"
 echo ""
 
-echo "GitHub Personal Token (nshonda)"
+echo "GitHub Personal Token (${WS_PERSONAL_GH_USER:-personal})"
 echo "  Create at: https://github.com/settings/tokens"
 read -sp "  Token: " GH_PERSONAL_TOKEN
 echo ""
 
-echo "GitHub Work Token (natalihonda-basis)"
+echo "GitHub Work Token (${WS_WORK_GH_USER:-work})"
 echo "  Create at: https://github.com/settings/tokens (work account)"
 read -sp "  Token: " GH_WORK_TOKEN
 echo ""
@@ -81,6 +81,10 @@ echo "--- Context7 Configuration ---"
 echo "  Get your API key from: https://context7.com (sign up for free)"
 read -sp "Context7 API key (or press Enter to skip): " CONTEXT7_KEY
 echo ""
+
+echo ""
+echo "--- GCS Configuration ---"
+read -p "GCS bucket for interactive plans (or press Enter to skip): " GCS_BUCKET
 
 # ---------- 3. Store credentials in keychain ----------
 
@@ -214,6 +218,12 @@ fi
 # Skills — copy all
 if [[ -d "$CLAUDE_DIR/skills" ]]; then
     cp -R "$CLAUDE_DIR/skills/"* ~/.claude/skills/ 2>/dev/null || true
+    # Fill in GCS bucket if provided
+    if [[ -n "${GCS_BUCKET:-}" ]] && [[ -f ~/.claude/skills/interactive-plan/SKILL.md ]]; then
+        ESCAPED_BUCKET=$(printf '%s\n' "$GCS_BUCKET" | sed 's/[&/\]/\\&/g')
+        sed -i.bak "s|<YOUR_GCS_BUCKET>|${ESCAPED_BUCKET}|g" ~/.claude/skills/interactive-plan/SKILL.md
+        rm -f ~/.claude/skills/interactive-plan/SKILL.md.bak
+    fi
     echo "Deployed skills to ~/.claude/skills/"
 fi
 

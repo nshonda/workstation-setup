@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Require identity env vars from setup.sh
+: "${WS_PERSONAL_GH_USER:?Set WS_PERSONAL_GH_USER before running this script}"
+: "${WS_WORK_GH_USER:?Set WS_WORK_GH_USER before running this script}"
+
 # Determine shell config file
 if [ -f "$HOME/.zshrc" ]; then
     RC_FILE="$HOME/.zshrc"
@@ -22,18 +26,20 @@ fi
 # Write marker line (expanded)
 printf '\n%s\n' "$MARKER" >> "$RC_FILE"
 
-# Write gh() wrapper (single-quoted heredoc — no expansion)
-cat >> "$RC_FILE" <<'EOF'
+# Write gh() wrapper (expanded heredoc — uses env vars)
+cat >> "$RC_FILE" <<EOF
 # Auto-switch gh account based on directory
 gh() {
-    local target="nshonda"
-    if [[ "$PWD" == "$HOME/workstation/work"* ]]; then
-        target="natalihonda-basis"
+    local target="${WS_PERSONAL_GH_USER}"
+    if [[ "\$PWD" == "\$HOME/workstation/work"* ]]; then
+        target="${WS_WORK_GH_USER}"
     fi
-    command gh auth switch --user "$target" 2>/dev/null || true
-    command gh "$@"
+    command gh auth switch --user "\$target" 2>/dev/null || true
+    command gh "\$@"
 }
 EOF
+# Trailing blank line so sed block deletion has a boundary on re-run
+printf '\n' >> "$RC_FILE"
 
 echo "Commands installed in $RC_FILE:"
 echo "  gh — Auto-switches GitHub account based on cwd (personal vs work)"

@@ -6,8 +6,8 @@
 
 | Key | Purpose |
 |-----|---------|
-| `id_rsa_mac` | Personal GitHub account (nshonda) |
-| `id_rsa_basis_mac` | Work GitHub account (natalihonda-basis) |
+| `id_rsa_mac` | Personal GitHub account |
+| `id_rsa_basis_mac` | Work GitHub account |
 
 ### `~/.ssh/config`
 
@@ -15,7 +15,7 @@
 Host github.com
     IdentityFile ~/.ssh/id_rsa_mac
 
-Host github.com-natalihonda-basis
+Host github.com-<WORK_GH_USERNAME>
     HostName github.com
     IdentityFile ~/.ssh/id_rsa_basis_mac
 ```
@@ -28,10 +28,10 @@ Machine-specific overrides. On macOS, this adds `UseKeychain yes`.
 
 ```bash
 # Personal repos — use github.com as normal
-git clone git@github.com:nshonda/my-repo.git
+git clone git@github.com:<PERSONAL_GH_USERNAME>/my-repo.git
 
 # Work repos — use the host alias
-git clone git@github.com-natalihonda-basis:basis-org/work-repo.git
+git clone git@github.com-<WORK_GH_USERNAME>:<WORK_ORG>/work-repo.git
 ```
 
 ## Conditional Git Identity
@@ -40,8 +40,8 @@ git clone git@github.com-natalihonda-basis:basis-org/work-repo.git
 
 ```gitconfig
 [user]
-    name = Natali Honda
-    email = natalihonda@gmail.com
+    name = <YOUR_NAME>
+    email = <PERSONAL_EMAIL>
 
 [includeIf "gitdir:~/workstation/work/"]
     path = ~/.gitconfig-basis
@@ -54,7 +54,7 @@ Any repo under `~/workstation/work/` automatically uses the work email. Everythi
 ```bash
 # Check which key GitHub sees
 ssh -T git@github.com
-ssh -T git@github.com-natalihonda-basis
+ssh -T git@github.com-<WORK_GH_USERNAME>
 
 # Check git identity in a repo
 cd ~/workstation/work/some-repo

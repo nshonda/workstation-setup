@@ -5,7 +5,7 @@ Script-driven setup for multi-GitHub account development workstations. One comma
 ## Quick Start
 
 ```bash
-git clone git@github.com:nshonda/workstation-setup.git ~/workstation/personal/workstation-setup
+git clone git@github.com:<YOUR_USERNAME>/workstation-setup.git ~/workstation/personal/workstation-setup
 cd ~/workstation/personal/workstation-setup
 ./setup.sh
 ```

@@ -3,9 +3,14 @@ set -euo pipefail
 
 echo "--- Git setup ---"
 
+# Require identity env vars from setup.sh
+: "${WS_FULL_NAME:?Set WS_FULL_NAME before running this script}"
+: "${WS_PERSONAL_EMAIL:?Set WS_PERSONAL_EMAIL before running this script}"
+: "${WS_WORK_EMAIL:?Set WS_WORK_EMAIL before running this script}"
+
 # Global identity
-git config --global user.name "Natali Honda"
-git config --global user.email "natalihonda@gmail.com"
+git config --global user.name "$WS_FULL_NAME"
+git config --global user.email "$WS_PERSONAL_EMAIL"
 
 # Defaults
 git config --global init.defaultBranch main
@@ -16,10 +21,10 @@ git config --global push.followTags true
 git config --global color.ui auto
 
 # Work-specific gitconfig
-cat > "$HOME/.gitconfig-basis" <<'EOF'
+cat > "$HOME/.gitconfig-basis" <<EOF
 [user]
-    name = Natali Honda
-    email = natali.honda@basisworldwide.com
+    name = ${WS_FULL_NAME}
+    email = ${WS_WORK_EMAIL}
 EOF
 
 # Conditional includes for work repos (multiple possible locations)

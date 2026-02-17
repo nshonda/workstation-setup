@@ -5,8 +5,8 @@ This file provides global guidance to Claude Code (claude.ai/code) across all re
 ## Workspace Structure
 
 - All repos live under `~/workstation/` split by account:
-  - `~/workstation/personal/` — personal GitHub account (`nshonda`)
-  - `~/workstation/work/` — work GitHub account (`natalihonda-basis`)
+  - `~/workstation/personal/` — personal GitHub account
+  - `~/workstation/work/` — work GitHub account
 - **direnv** manages per-directory environment variables (GitHub tokens, Jira creds, Redmine creds) — credentials are pulled from the system credential store (macOS Keychain, `secret-tool`/`pass` on Linux), never hardcoded
 - Git identity switches automatically via `includeIf` (personal email for personal repos, work email for work repos)
 
@@ -94,14 +94,9 @@ When creating a branch for a Jira ticket, use this format:
 
 To generate from Jira MCP issue data:
 1. Get issue with `jira_get_issue`
-2. Take the `key` (e.g., `FCR-68`)
+2. Take the `key` (e.g., `PROJ-123`)
 3. Take the `summary`, lowercase it, replace spaces with hyphens
-4. Combine: `FCR-68-user-paid-past-due-balance-but-no-confirmation-received`
-
-Example transformation:
-- Key: `FCR-68`
-- Summary: `User Paid past due balance but no confirmation received`
-- Branch: `FCR-68-user-paid-past-due-balance-but-no-confirmation-received`
+4. Combine: `PROJ-123-fix-the-broken-thing`
 
 ## Research Folder
 

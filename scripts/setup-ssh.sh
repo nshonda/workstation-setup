@@ -3,6 +3,9 @@ set -euo pipefail
 
 echo "--- SSH setup ---"
 
+# Require identity env vars from setup.sh
+: "${WS_WORK_GH_USER:?Set WS_WORK_GH_USER before running this script}"
+
 SSH_DIR="$HOME/.ssh"
 mkdir -p "$SSH_DIR"
 chmod 700 "$SSH_DIR"
@@ -19,11 +22,11 @@ generate_key() {
     fi
 }
 
-generate_key id_rsa_mac       "personal GitHub"      rsa
-generate_key id_rsa_basis_mac "work GitHub (Basis)"  rsa
+generate_key id_rsa_mac       "personal GitHub"  rsa
+generate_key id_rsa_basis_mac "work GitHub"      rsa
 
 # Write ~/.ssh/config (portable, no machine-specific paths)
-cat > "$SSH_DIR/config" <<'EOF'
+cat > "$SSH_DIR/config" <<EOF
 # Personal GitHub Account
 Host github.com
     HostName github.com
@@ -31,8 +34,8 @@ Host github.com
     IdentitiesOnly yes
     # Key path specified in config.local (machine-specific)
 
-# Basis Work GitHub Account
-Host github.com-natalihonda-basis
+# Work GitHub Account
+Host github.com-${WS_WORK_GH_USER}
     HostName github.com
     User git
     IdentitiesOnly yes
@@ -58,25 +61,25 @@ chmod 600 "$SSH_DIR/config"
 # Write ~/.ssh/config.local (machine-specific)
 if [ ! -f "$SSH_DIR/config.local" ]; then
     if [ "$(uname -s)" = "Darwin" ]; then
-        cat > "$SSH_DIR/config.local" <<'EOF'
+        cat > "$SSH_DIR/config.local" <<EOF
 # Personal GitHub - Mac key
 Host github.com
     IdentityFile ~/.ssh/id_rsa_mac
     UseKeychain yes
 
-# Basis GitHub - Mac key
-Host github.com-natalihonda-basis
+# Work GitHub - Mac key
+Host github.com-${WS_WORK_GH_USER}
     IdentityFile ~/.ssh/id_rsa_basis_mac
     UseKeychain yes
 EOF
     else
-        cat > "$SSH_DIR/config.local" <<'EOF'
+        cat > "$SSH_DIR/config.local" <<EOF
 # Personal GitHub
 Host github.com
     IdentityFile ~/.ssh/id_rsa_mac
 
-# Basis GitHub
-Host github.com-natalihonda-basis
+# Work GitHub
+Host github.com-${WS_WORK_GH_USER}
     IdentityFile ~/.ssh/id_rsa_basis_mac
 EOF
     fi

@@ -22,7 +22,7 @@ Script-driven workstation setup for multi-GitHub account development. Sets up SS
 - **Workspace**: `~/workstation/{personal,work}/` — all repos live here
 - **SSH**: Two RSA keys (personal GitHub, work GitHub) with host aliases
 - **Git**: Conditional identity via `includeIf` — work email for `~/workstation/work/`
-- **GitHub CLI**: `gh` auto-switches between personal (`nshonda`) and work (`natalihonda-basis`) via shell wrapper
+- **GitHub CLI**: `gh` auto-switches between personal and work accounts via shell wrapper
 - **Direnv**: Per-directory env vars — `GITHUB_TOKEN`, Jira/Redmine creds switch automatically
 - **Claude Code**: Config, skills, hooks deployed to `~/.claude/`; MCP servers registered in `~/.claude.json`
 
@@ -48,6 +48,7 @@ claude/
 docs/
   ssh-github-multi-account.md
   wsl-setup.md
+  gcs-setup.md
 ```
 
 ## Conventions

@@ -18,6 +18,14 @@ for pkg in gh cloudflared jq direnv; do
     fi
 done
 
+# gcloud — package name differs from binary name
+if ! command -v gcloud &>/dev/null; then
+    echo "Installing google-cloud-sdk..."
+    brew install google-cloud-sdk
+else
+    echo "gcloud already installed"
+fi
+
 # Install RTK (Rust Token Killer) via cargo
 if command -v cargo &>/dev/null; then
     if ! command -v rtk &>/dev/null; then

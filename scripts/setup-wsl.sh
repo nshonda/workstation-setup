@@ -14,6 +14,23 @@ for pkg in openssh-client git gh jq direnv; do
     fi
 done
 
+# gcloud — requires Google's apt repo, install separately
+if ! command -v gcloud &>/dev/null; then
+    if dpkg -s google-cloud-cli &>/dev/null 2>&1; then
+        echo "gcloud already installed"
+    else
+        echo "Installing google-cloud-cli..."
+        if sudo apt-get install -y -qq google-cloud-cli 2>/dev/null; then
+            echo "gcloud installed"
+        else
+            echo "google-cloud-cli not in apt repos — install manually:"
+            echo "  https://cloud.google.com/sdk/docs/install#deb"
+        fi
+    fi
+else
+    echo "gcloud already installed"
+fi
+
 # Line ending handling
 git config --global core.autocrlf input
 
