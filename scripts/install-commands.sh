@@ -25,12 +25,10 @@ printf '\n%s\n' "$MARKER" >> "$RC_FILE"
 # Write gh() wrapper (single-quoted heredoc — no expansion)
 cat >> "$RC_FILE" <<'EOF'
 # Auto-switch gh account based on directory
-GH_PERSONAL="nshonda"
-GH_WORK="natalihonda-basis"
 gh() {
-    local target="$GH_PERSONAL"
+    local target="nshonda"
     if [[ "$PWD" == "$HOME/workstation/work"* ]]; then
-        target="$GH_WORK"
+        target="natalihonda-basis"
     fi
     command gh auth switch --user "$target" 2>/dev/null || true
     command gh "$@"
