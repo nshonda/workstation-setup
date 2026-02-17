@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(direnv version:*)",
+      "Bash(gh auth:*)",
+      "Bash(security add-generic-password:*)",
+      "Bash(secret-tool store:*)",
+      "Bash(secret-tool lookup:*)",
+      "Bash(direnv allow:*)",
+      "Bash(direnv exec:*)",
+      "Bash(xargs:*)"
+    ]
+  }
+}
