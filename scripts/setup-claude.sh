@@ -395,11 +395,43 @@ if [[ "$PLATFORM" == "linux" && -n "$SHELL_RC" ]] && ! grep -q "gnome-keyring-da
 if [ -z "${DBUS_SESSION_BUS_ADDRESS:-}" ]; then
     eval "$(dbus-launch --sh-syntax)"
 fi
-eval "$(echo '' | gnome-keyring-daemon --unlock --components=secrets 2>/dev/null)" || true
+if ! pgrep -u "$USER" -x gnome-keyring-d >/dev/null 2>&1; then
+    eval "$(echo '' | gnome-keyring-daemon --unlock --components=secrets 2>/dev/null)" || true
+fi
 KEYRING_EOF
     echo "Added gnome-keyring startup to $SHELL_RC"
 else
     [[ "$PLATFORM" == "linux" ]] && echo "gnome-keyring startup already present in $SHELL_RC"
+fi
+
+# Add GitHub token fallback for Claude Code MCP plugin (directory-dependent)
+if [[ -n "$SHELL_RC" ]] && ! grep -q "GitHub token for Claude Code MCP plugin" "$SHELL_RC" 2>/dev/null; then
+    if [[ "$PLATFORM" == "mac" ]]; then
+        cat >> "$SHELL_RC" << 'GITHUB_EOF'
+
+# GitHub token for Claude Code MCP plugin (directory-dependent)
+# Set before direnv as a reliable fallback for MCP plugin initialization
+if [[ "$PWD" == "$HOME/workstation/work"* ]]; then
+    export GITHUB_PERSONAL_ACCESS_TOKEN=$(security find-generic-password -s "github-work" -a "api-token" -w 2>/dev/null)
+elif [[ "$PWD" == "$HOME/workstation/personal"* ]]; then
+    export GITHUB_PERSONAL_ACCESS_TOKEN=$(security find-generic-password -s "github-personal" -a "api-token" -w 2>/dev/null)
+fi
+GITHUB_EOF
+    else
+        cat >> "$SHELL_RC" << 'GITHUB_EOF'
+
+# GitHub token for Claude Code MCP plugin (directory-dependent)
+# Set before direnv as a reliable fallback for MCP plugin initialization
+if [[ "$PWD" == "$HOME/workstation/work"* ]]; then
+    export GITHUB_PERSONAL_ACCESS_TOKEN=$(secret-tool lookup service github-work username api-token 2>/dev/null)
+elif [[ "$PWD" == "$HOME/workstation/personal"* ]]; then
+    export GITHUB_PERSONAL_ACCESS_TOKEN=$(secret-tool lookup service github-personal username api-token 2>/dev/null)
+fi
+GITHUB_EOF
+    fi
+    echo "Added GitHub token fallback to $SHELL_RC"
+else
+    echo "GitHub token fallback already present in $SHELL_RC"
 fi
 
 direnv allow ~/workstation/work 2>/dev/null || true
