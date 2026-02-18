@@ -105,16 +105,21 @@ if [[ "$PLATFORM" == "mac" ]]; then
     security add-generic-password -s "redmine-personal" -a "api-key" -w "$REDMINE_KEY"
     echo "Credentials stored in macOS Keychain"
 else
-    if command -v secret-tool &>/dev/null; then
-        echo "$GH_PERSONAL_TOKEN" | secret-tool store --label="GitHub Personal Token" service github-personal username api-token
-        echo "$GH_WORK_TOKEN" | secret-tool store --label="GitHub Work Token" service github-work username api-token
-        echo "$JIRA_TOKEN" | secret-tool store --label="Jira Work API Token" service jira-work username api-token
-        echo "$REDMINE_KEY" | secret-tool store --label="Redmine Personal API Key" service redmine-personal username api-key
-        echo "Credentials stored in gnome-keyring"
-    else
-        echo "WARNING: secret-tool not found. Install gnome-keyring for secure storage."
-        echo "Credentials will need to be set manually in environment variables."
+    if ! command -v secret-tool &>/dev/null; then
+        echo "ERROR: secret-tool not found. Run setup-wsl.sh first to install keyring packages."
+        exit 1
     fi
+    # Start gnome-keyring daemon for this session
+    if [ -z "${DBUS_SESSION_BUS_ADDRESS:-}" ]; then
+        eval "$(dbus-launch --sh-syntax)"
+    fi
+    eval "$(echo '' | gnome-keyring-daemon --unlock --components=secrets 2>/dev/null)" || true
+
+    echo -n "$GH_PERSONAL_TOKEN" | secret-tool store --label="GitHub Personal Token" service github-personal username api-token
+    echo -n "$GH_WORK_TOKEN" | secret-tool store --label="GitHub Work Token" service github-work username api-token
+    echo -n "$JIRA_TOKEN" | secret-tool store --label="Jira Work API Token" service jira-work username api-token
+    echo -n "$REDMINE_KEY" | secret-tool store --label="Redmine Personal API Key" service redmine-personal username api-key
+    echo "Credentials stored in gnome-keyring"
 fi
 
 # ---------- 4. Create MCP wrapper scripts ----------
@@ -374,6 +379,21 @@ if [[ -n "$SHELL_RC" ]] && ! grep -q "direnv hook" "$SHELL_RC" 2>/dev/null; then
     echo "Added direnv hook to $SHELL_RC"
 else
     echo "direnv hook already present in $SHELL_RC"
+fi
+
+# On Linux, add gnome-keyring startup so secret-tool works in new shells
+if [[ "$PLATFORM" == "linux" && -n "$SHELL_RC" ]] && ! grep -q "gnome-keyring-daemon" "$SHELL_RC" 2>/dev/null; then
+    cat >> "$SHELL_RC" << 'KEYRING_EOF'
+
+# Start gnome-keyring for secret-tool (direnv credentials)
+if [ -z "${DBUS_SESSION_BUS_ADDRESS:-}" ]; then
+    eval "$(dbus-launch --sh-syntax)"
+fi
+eval "$(echo '' | gnome-keyring-daemon --unlock --components=secrets 2>/dev/null)" || true
+KEYRING_EOF
+    echo "Added gnome-keyring startup to $SHELL_RC"
+else
+    [[ "$PLATFORM" == "linux" ]] && echo "gnome-keyring startup already present in $SHELL_RC"
 fi
 
 direnv allow ~/workstation/work 2>/dev/null || true

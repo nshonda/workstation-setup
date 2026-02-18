@@ -5,7 +5,7 @@ echo "--- WSL/Linux setup ---"
 
 # Install dependencies
 sudo apt-get update -qq
-for pkg in openssh-client git gh jq direnv; do
+for pkg in openssh-client git gh jq direnv libsecret-tools gnome-keyring dbus-x11; do
     if ! dpkg -s "$pkg" &>/dev/null 2>&1; then
         echo "Installing $pkg..."
         sudo apt-get install -y -qq "$pkg"
