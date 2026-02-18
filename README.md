@@ -53,30 +53,54 @@ All scripts are idempotent. Re-run `./setup.sh` or any individual script to upda
 
 ### Claude Code Plugins
 
+From [claude-plugins-official](https://github.com/anthropics/claude-plugins-official):
+
 | Plugin | Purpose |
 |--------|---------|
-| [claude-plugins-official](https://github.com/anthropics/claude-plugins-official) | GitHub, Playwright, Supabase, code review, and more |
+| [superpowers](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/superpowers) | Brainstorming, TDD, debugging, verification, git worktrees |
+| [feature-dev](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/feature-dev) | Guided feature development with architecture focus |
+| [commit-commands](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/commit-commands) | Git commit, push, and PR workflows |
+| [code-review](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/code-review) | GitHub pull request code review |
+| [pr-review-toolkit](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/pr-review-toolkit) | Multi-agent PR review (code, tests, types, comments) |
+| [code-simplifier](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/code-simplifier) | Post-implementation code simplification |
+| [frontend-design](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/frontend-design) | Production-grade frontend/UI development |
+| [hookify](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/hookify) | Create and manage Claude Code hooks |
+| [security-guidance](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/security-guidance) | Security best practices |
+| [claude-md-management](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/claude-md-management) | Audit and improve CLAUDE.md files |
+| [claude-code-setup](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/claude-code-setup) | Recommend Claude Code automations for a project |
+| [github](https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/github) | GitHub MCP server (issues, PRs, repos) |
+| [playwright](https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/playwright) | Browser automation and testing |
+| [supabase](https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/supabase) | Supabase integration |
+| [typescript-lsp](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/typescript-lsp) | TypeScript language server |
+| [php-lsp](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/php-lsp) | PHP language server |
+
+Third-party:
+
+| Plugin | Purpose |
+|--------|---------|
 | [pro-workflow](https://github.com/rohitg00/pro-workflow) | Session management, learning capture, smart commits |
 
 ### Claude Code Skills (bundled)
 
-| Skill | Source |
-|-------|--------|
-| research | 6-agent parallel deep research |
-| interactive-plan | HTML architecture plans with Mermaid diagrams ([GCS setup](docs/gcs-setup.md)) |
-| [web-design-guidelines](https://github.com/vercel-labs/web-interface-guidelines) | UI/accessibility audit |
-| [next-best-practices](https://nextjs.org/docs) | Next.js file conventions, RSC, data patterns |
-| [vercel-react-best-practices](https://vercel.com/blog) | React + Next.js performance optimization |
-| [supabase-postgres-best-practices](https://supabase.com/docs/guides/database) | Postgres schema and query optimization |
-| ss-dev | [SilverStripe](https://docs.silverstripe.org/) CMS development (SS3/4/5) |
-| nuxt-dev | [Nuxt 3/4](https://nuxt.com/docs) framework conventions |
-| wp-dev | [WordPress](https://developer.wordpress.org/) plugin/theme development |
-| [web-quality-audit](https://github.com/addyosmani/web-quality-skills) | Lighthouse-based web quality audit |
-| performance | Web performance optimization |
-| core-web-vitals | LCP, INP, CLS optimization |
-| accessibility | WCAG 2.1 compliance audit |
-| seo | Search engine optimization |
-| best-practices | Security headers, modern APIs |
+Skills are deployed to `~/.claude/skills/` — see [`claude/skills/`](claude/skills/) for source.
+
+| Skill | Purpose | Based on |
+|-------|---------|----------|
+| research | 6-agent parallel deep research | Custom |
+| interactive-plan | HTML architecture plans with Mermaid diagrams ([GCS setup](docs/gcs-setup.md)) | Custom |
+| [web-quality-audit](https://github.com/nicholasgriffintn/web-quality-skills) | Lighthouse-based web quality audit (150+ checks) | [addyosmani/web-quality-skills](https://github.com/addyosmani/web-quality-skills) |
+| [web-design-guidelines](https://github.com/vercel-labs/web-interface-guidelines) | UI review for Web Interface Guidelines | [vercel-labs/web-interface-guidelines](https://github.com/vercel-labs/web-interface-guidelines) |
+| [next-best-practices](https://nextjs.org/docs) | Next.js file conventions, RSC, data patterns | [Next.js docs](https://nextjs.org/docs) |
+| [vercel-react-best-practices](https://vercel.com/blog) | React + Next.js performance (57 rules) | [Vercel Engineering blog](https://vercel.com/blog) |
+| [supabase-postgres-best-practices](https://supabase.com/docs/guides/database) | Postgres schema and query optimization (70+ rules) | [Supabase docs](https://supabase.com/docs/guides/database) |
+| ss-dev | SilverStripe CMS development (SS3/4/5) | [SilverStripe docs](https://docs.silverstripe.org/) |
+| nuxt-dev | Nuxt 3/4 framework conventions | [Nuxt docs](https://nuxt.com/docs) |
+| wp-dev | WordPress plugin/theme development | [WordPress Developer Resources](https://developer.wordpress.org/) |
+| performance | Web performance optimization | [web.dev](https://web.dev/performance/) |
+| core-web-vitals | LCP, INP, CLS optimization | [web.dev Core Web Vitals](https://web.dev/vitals/) |
+| accessibility | WCAG 2.1 compliance audit | [WCAG 2.1](https://www.w3.org/TR/WCAG21/) |
+| seo | Search engine optimization | [web.dev SEO](https://web.dev/learn/seo/) |
+| best-practices | Security headers, modern APIs | [web.dev](https://web.dev/) |
 
 ### Additional Docs
 
