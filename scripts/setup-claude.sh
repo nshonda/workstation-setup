@@ -327,6 +327,9 @@ fi
 export JIRA_URL="https://${JIRA_URL}"
 export JIRA_USERNAME="${JIRA_EMAIL}"
 
+# GitHub MCP plugin expects GITHUB_PERSONAL_ACCESS_TOKEN
+export GITHUB_PERSONAL_ACCESS_TOKEN="\$GITHUB_TOKEN"
+
 # Unset personal service vars
 unset REDMINE_URL
 unset REDMINE_API_KEY
@@ -345,6 +348,9 @@ else
 fi
 
 export REDMINE_URL="https://${REDMINE_URL}"
+
+# GitHub MCP plugin expects GITHUB_PERSONAL_ACCESS_TOKEN
+export GITHUB_PERSONAL_ACCESS_TOKEN="\$GITHUB_TOKEN"
 
 # Unset work service vars
 unset JIRA_URL
