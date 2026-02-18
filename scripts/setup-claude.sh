@@ -11,6 +11,10 @@ CLAUDE_DIR="$REPO_DIR/claude"
 echo "=== Claude Code Setup ==="
 echo ""
 
+# Require identity env vars from setup.sh
+: "${WS_PERSONAL_GH_USER:?Set WS_PERSONAL_GH_USER before running this script}"
+: "${WS_WORK_GH_USER:?Set WS_WORK_GH_USER before running this script}"
+
 # ---------- Platform detection ----------
 
 OS="$(uname -s)"
@@ -45,12 +49,12 @@ echo ""
 echo "--- Credentials ---"
 echo ""
 
-echo "GitHub Personal Token (${WS_PERSONAL_GH_USER:-personal})"
+echo "GitHub Personal Token (${WS_PERSONAL_GH_USER})"
 echo "  Create at: https://github.com/settings/tokens"
 read -sp "  Token: " GH_PERSONAL_TOKEN
 echo ""
 
-echo "GitHub Work Token (${WS_WORK_GH_USER:-work})"
+echo "GitHub Work Token (${WS_WORK_GH_USER})"
 echo "  Create at: https://github.com/settings/tokens (work account)"
 read -sp "  Token: " GH_WORK_TOKEN
 echo ""
