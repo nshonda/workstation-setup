@@ -60,6 +60,12 @@ Invoke skills by context — do not wait for slash commands. Match the user's in
 - Next.js / React project detected → `next-best-practices` + `vercel-react-best-practices`
 - Supabase / Postgres work → `supabase-postgres-best-practices`
 - UI review, accessibility audit, design check → `web-design-guidelines`
+- Web quality audit, Lighthouse audit → `web-quality-audit`
+- Web performance optimization, page speed → `performance`
+- Core Web Vitals (LCP, INP, CLS) → `core-web-vitals`
+- Accessibility audit, WCAG, a11y → `accessibility`
+- SEO audit, search optimization → `seo`
+- Security headers, modern APIs, best practices → `best-practices`
 
 **Research:**
 - Deep investigation of a codebase question or architecture decision → `research`

@@ -71,6 +71,12 @@ All scripts are idempotent. Re-run `./setup.sh` or any individual script to upda
 | ss-dev | [SilverStripe](https://docs.silverstripe.org/) CMS development (SS3/4/5) |
 | nuxt-dev | [Nuxt 3/4](https://nuxt.com/docs) framework conventions |
 | wp-dev | [WordPress](https://developer.wordpress.org/) plugin/theme development |
+| [web-quality-audit](https://github.com/addyosmani/web-quality-skills) | Lighthouse-based web quality audit |
+| performance | Web performance optimization |
+| core-web-vitals | LCP, INP, CLS optimization |
+| accessibility | WCAG 2.1 compliance audit |
+| seo | Search engine optimization |
+| best-practices | Security headers, modern APIs |
 
 ### Additional Docs
 
