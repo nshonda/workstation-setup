@@ -16,7 +16,7 @@ A walkthrough of how I've configured Claude Code as my primary personal developm
 ├── settings.local.json    ← Per-machine overrides
 ├── hooks/
 │   └── rtk-rewrite.sh    ← Transparent command rewriting
-├── skills/                ← 9 custom skills
+├── skills/                ← 15 custom skills
 └── plugins/               ← 17 plugins from 2 marketplaces (includes slash commands)
 ```
 
@@ -77,12 +77,12 @@ MCP (Model Context Protocol) servers give Claude direct access to external servi
 
 | MCP Server | Purpose |
 |------------|---------|
-| **context7** | Library docs & code examples (replaces web searches) |
-| **chrome-devtools** | Browser automation, screenshots, performance profiling |
-| **redmine-personal** | Redmine project tracking |
-| **github** | GitHub API (PRs, issues, repos) |
-| **playwright** | Browser testing automation |
-| **supabase** | Database management |
+| **[context7](https://context7.com/)** | Library docs & code examples (replaces web searches) |
+| **[chrome-devtools](https://github.com/nicholasgriffintn/chrome-devtools-mcp)** | Browser automation, screenshots, performance profiling |
+| **[redmine-personal](https://github.com/runekaagaard/mcp-redmine)** | Redmine project tracking |
+| **[github](https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/github)** | GitHub API (PRs, issues, repos) |
+| **[playwright](https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/playwright)** | Browser testing automation |
+| **[supabase](https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/supabase)** | Database management |
 
 **Key insight:** MCP servers are preferred over CLI tools in my tool priority hierarchy. Claude uses the GitHub MCP instead of `gh` CLI commands.
 
@@ -91,49 +91,49 @@ MCP (Model Context Protocol) servers give Claude direct access to external servi
 ## Layer 5: Plugins (17 Enabled)
 
 From two marketplaces:
-- **claude-plugins-official** (Anthropic's marketplace) — 16 plugins
-- **pro-workflow** (community) — 1 plugin
+- **[claude-plugins-official](https://github.com/anthropics/claude-plugins-official)** (Anthropic's marketplace) — 16 plugins
+- **[pro-workflow](https://github.com/rohitg00/pro-workflow)** (community) — 1 plugin
 
 ### Development Workflow
 | Plugin | What it does |
 |--------|-------------|
-| **superpowers** | Brainstorming, TDD, systematic debugging, parallel agents |
-| **feature-dev** | Guided feature development with architecture focus |
-| **commit-commands** | Smart commits, branch cleanup, push + PR |
-| **pr-review-toolkit** | Multi-agent PR review (code, types, tests, security) |
-| **code-review** | Single-PR code review |
-| **code-simplifier** | Post-implementation cleanup |
+| **[superpowers](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/superpowers)** | Brainstorming, TDD, systematic debugging, parallel agents |
+| **[feature-dev](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/feature-dev)** | Guided feature development with architecture focus |
+| **[commit-commands](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/commit-commands)** | Smart commits, branch cleanup, push + PR |
+| **[pr-review-toolkit](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/pr-review-toolkit)** | Multi-agent PR review (code, types, tests, security) |
+| **[code-review](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/code-review)** | Single-PR code review |
+| **[code-simplifier](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/code-simplifier)** | Post-implementation cleanup |
 
 ### Language Support
 | Plugin | What it does |
 |--------|-------------|
-| **typescript-lsp** | TypeScript/JS language server integration |
-| **php-lsp** | PHP/Intelephense language server integration |
+| **[typescript-lsp](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/typescript-lsp)** | TypeScript/JS language server integration |
+| **[php-lsp](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/php-lsp)** | PHP/Intelephense language server integration |
 
 ### Infrastructure
 | Plugin | What it does |
 |--------|-------------|
-| **github** | GitHub MCP server (HTTP transport) |
-| **playwright** | Playwright MCP server (browser automation) |
-| **supabase** | Supabase MCP server |
+| **[github](https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/github)** | GitHub MCP server (HTTP transport) |
+| **[playwright](https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/playwright)** | Playwright MCP server (browser automation) |
+| **[supabase](https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/supabase)** | Supabase MCP server |
 
 ### Quality & Safety
 | Plugin | What it does |
 |--------|-------------|
-| **security-guidance** | Security-focused hooks |
-| **hookify** | Create custom hooks from conversation analysis |
-| **claude-md-management** | Audit and improve CLAUDE.md files |
-| **claude-code-setup** | Analyze codebases and recommend automations |
+| **[security-guidance](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/security-guidance)** | Security-focused hooks |
+| **[hookify](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/hookify)** | Create custom hooks from conversation analysis |
+| **[claude-md-management](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/claude-md-management)** | Audit and improve CLAUDE.md files |
+| **[claude-code-setup](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/claude-code-setup)** | Analyze codebases and recommend automations |
 
 ### Design
 | Plugin | What it does |
 |--------|-------------|
-| **frontend-design** | Production-grade UI generation |
+| **[frontend-design](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/frontend-design)** | Production-grade UI generation |
 
 ### Meta
 | Plugin | What it does |
 |--------|-------------|
-| **pro-workflow** | Session lifecycle hooks, learning capture, quality gates |
+| **[pro-workflow](https://github.com/rohitg00/pro-workflow)** | Session lifecycle hooks, learning capture, quality gates |
 
 ---
 
@@ -147,16 +147,27 @@ Skills are reusable behavior definitions that Claude activates by context — no
 |-------|------------|--------------|
 | `ss-dev` | SilverStripe project | Version detection (SS3/4/5), page types, extensions, dev/build reminders |
 | `wp-dev` | WordPress project | Plugin/theme detection, WP coding standards, CPT/shortcode patterns |
-| `nuxt-dev` | Nuxt project | Nuxt 3/4 detection, auto-imports, SSR data fetching, Nitro/H3 |
-| `next-best-practices` | Next.js project | File conventions, RSC boundaries, async APIs, data patterns, metadata |
-| `vercel-react-best-practices` | React/Next.js project | 57 performance rules across 8 priority categories |
-| `supabase-postgres-best-practices` | Supabase/Postgres work | Query optimization, connection management, RLS, schema design |
+| [`nuxt-dev`](https://nuxt.com/docs) | Nuxt project | Nuxt 3/4 detection, auto-imports, SSR data fetching, Nitro/H3 |
+| [`next-best-practices`](https://nextjs.org/docs) | Next.js project | File conventions, RSC boundaries, async APIs, data patterns, metadata |
+| [`vercel-react-best-practices`](https://vercel.com/blog) | React/Next.js project | 57 performance rules across 8 priority categories |
+| [`supabase-postgres-best-practices`](https://supabase.com/docs/guides/database) | Supabase/Postgres work | Query optimization, connection management, RLS, schema design |
+
+### Web Quality Skills (from [addyosmani/web-quality-skills](https://github.com/addyosmani/web-quality-skills))
+
+| Skill | Triggers On | What It Does |
+|-------|------------|--------------|
+| [`web-quality-audit`](https://github.com/addyosmani/web-quality-skills) | Web quality audit, Lighthouse | Comprehensive audit: performance, accessibility, SEO, best practices (150+ checks) |
+| `performance` | Page speed optimization | Resource optimization, rendering, caching, code splitting |
+| `core-web-vitals` | LCP, INP, CLS issues | Core Web Vitals optimization for page experience and search ranking |
+| `accessibility` | WCAG, a11y audit | WCAG 2.1 compliance: perceivable, operable, understandable, robust |
+| `seo` | Search optimization | Technical SEO, meta tags, structured data, crawlability |
+| `best-practices` | Security headers, code quality | Security headers, modern APIs, browser compatibility |
 
 ### Utility Skills (contextually invoked)
 
 | Skill | Triggers On | What It Does |
 |-------|------------|--------------|
-| `web-design-guidelines` | UI review, accessibility audit | Web Interface Guidelines compliance check |
+| [`web-design-guidelines`](https://github.com/vercel-labs/web-interface-guidelines) | UI review, design audit | Web Interface Guidelines compliance check |
 | `research` | Deep investigation needed | 6-agent parallel research with consensus analysis |
 | `interactive-plan` | Architecture planning | Self-contained HTML doc with Mermaid diagrams, phase tracking, feedback |
 

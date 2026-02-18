@@ -373,7 +373,7 @@
       <div class="stat-card"><div class="stat-number">17</div><div class="stat-label">Plugins</div></div>
       <div class="stat-card"><div class="stat-number">13</div><div class="stat-label">Commands</div></div>
       <div class="stat-card"><div class="stat-number">6</div><div class="stat-label">MCP Servers</div></div>
-      <div class="stat-card"><div class="stat-number">9</div><div class="stat-label">Skills</div></div>
+      <div class="stat-card"><div class="stat-number">15</div><div class="stat-label">Skills</div></div>
       <div class="stat-card"><div class="stat-number">30+</div><div class="stat-label">RTK Commands</div></div>
     </div>
   </section>
@@ -390,7 +390,7 @@ block-beta
 
   L1["1. Global Instructions<br>CLAUDE.md + RTK.md"]:3
   L2["2. Credentials<br>direnv + Credential Store"] L3["3. Token Optimization<br>RTK + PreToolUse Hook"] L4["4. MCP Servers<br>context7, chrome-devtools,<br>github, playwright, supabase, redmine"]
-  L5["5. Plugins (17)<br>Workflow, Languages,<br>Infra, Quality, Design, Meta"] L6["6. Skills (9)<br>Frameworks, Performance,<br>Research, Design, Planning"] L7["7. Commands<br>Plugin-provided<br>(pro-workflow, commit-commands)"]
+  L5["5. Plugins (17)<br>Workflow, Languages,<br>Infra, Quality, Design, Meta"] L6["6. Skills (15)<br>Frameworks, Web Quality,<br>Research, Design, Planning"] L7["7. Commands<br>Plugin-provided<br>(pro-workflow, commit-commands)"]
   L8["8. Hooks<br>PreToolUse, PostToolUse,<br>SessionStart/End, Stop"] L9["9. Persistent Memory<br>MEMORY.md + SQLite FTS5"]:2
 
   style L1 fill:#ddf4ff,stroke:#0969da,color:#1f2328
@@ -470,6 +470,7 @@ flowchart TD
     ROUTE -->|"Bug / test failure"| D["systematic-debugging"]
     ROUTE -->|"Deep investigation"| R["research (6-agent)"]
     ROUTE -->|"Project type detected"| FW["Framework skill<br>(ss-dev / wp-dev / nuxt-dev /<br>next / react / supabase)"]
+    ROUTE -->|"Web quality audit"| WQ["Web quality skills<br>(performance / a11y / seo /<br>core-web-vitals / best-practices)"]
     ROUTE -->|"UI review"| WD["web-design-guidelines"]
     ROUTE -->|"Ready to commit"| C["commit-commands:commit"]
     ROUTE -->|"Finishing work"| V["verification-before-completion"]
@@ -479,6 +480,7 @@ flowchart TD
     style D fill:#ffebe9,stroke:#cf222e,color:#1f2328
     style R fill:#dafbe1,stroke:#1a7f37,color:#1f2328
     style FW fill:#fff8c5,stroke:#bc4c00,color:#1f2328
+    style WQ fill:#dafbe1,stroke:#1a7f37,color:#1f2328
     style WD fill:#ddf4ff,stroke:#0969da,color:#1f2328
     style C fill:#dafbe1,stroke:#1a7f37,color:#1f2328
     style V fill:#ffebe9,stroke:#cf222e,color:#1f2328
@@ -584,15 +586,21 @@ flowchart LR
           <td>Context-activated behavior definitions; routing table in CLAUDE.md maps intent to skills</td>
           <td><span class="badge badge-done">Done</span></td>
           <td>Layer 1</td>
-          <td>9 skills</td>
+          <td>15 skills</td>
         </tr>
         <tr class="subtask-row" data-phase="6"><td colspan="5"><strong>ss-dev</strong> - SilverStripe: version detection (SS3/4/5), page types, extensions, dev/build reminders</td></tr>
         <tr class="subtask-row" data-phase="6"><td colspan="5"><strong>wp-dev</strong> - WordPress: plugin/theme detection, WP coding standards, CPT/shortcode patterns</td></tr>
-        <tr class="subtask-row" data-phase="6"><td colspan="5"><strong>nuxt-dev</strong> - Nuxt 3/4: auto-imports, SSR data fetching, Nitro/H3 conventions</td></tr>
-        <tr class="subtask-row" data-phase="6"><td colspan="5"><strong>next-best-practices</strong> - Next.js: file conventions, RSC boundaries, async APIs, data patterns, metadata</td></tr>
-        <tr class="subtask-row" data-phase="6"><td colspan="5"><strong>vercel-react-best-practices</strong> - React/Next.js: 57 performance rules across 8 categories (waterfalls, bundles, SSR, re-renders)</td></tr>
-        <tr class="subtask-row" data-phase="6"><td colspan="5"><strong>supabase-postgres-best-practices</strong> - Postgres: query optimization, connection management, RLS, schema design</td></tr>
-        <tr class="subtask-row" data-phase="6"><td colspan="5"><strong>web-design-guidelines</strong> - Web Interface Guidelines: compliance review for UI code and accessibility</td></tr>
+        <tr class="subtask-row" data-phase="6"><td colspan="5"><strong>nuxt-dev</strong> - <a href="https://nuxt.com/docs">Nuxt</a> 3/4: auto-imports, SSR data fetching, Nitro/H3 conventions</td></tr>
+        <tr class="subtask-row" data-phase="6"><td colspan="5"><strong>next-best-practices</strong> - <a href="https://nextjs.org/docs">Next.js</a>: file conventions, RSC boundaries, async APIs, data patterns, metadata</td></tr>
+        <tr class="subtask-row" data-phase="6"><td colspan="5"><strong>vercel-react-best-practices</strong> - <a href="https://vercel.com/blog">React/Next.js</a>: 57 performance rules across 8 categories (waterfalls, bundles, SSR, re-renders)</td></tr>
+        <tr class="subtask-row" data-phase="6"><td colspan="5"><strong>supabase-postgres-best-practices</strong> - <a href="https://supabase.com/docs/guides/database">Postgres</a>: query optimization, connection management, RLS, schema design</td></tr>
+        <tr class="subtask-row" data-phase="6"><td colspan="5"><strong>web-quality-audit</strong> - <a href="https://github.com/addyosmani/web-quality-skills">Lighthouse-based</a> comprehensive audit: performance, accessibility, SEO, best practices (150+ checks)</td></tr>
+        <tr class="subtask-row" data-phase="6"><td colspan="5"><strong>performance</strong> - Web performance: resource optimization, rendering, caching, code splitting</td></tr>
+        <tr class="subtask-row" data-phase="6"><td colspan="5"><strong>core-web-vitals</strong> - Core Web Vitals: LCP, INP, CLS optimization for page experience</td></tr>
+        <tr class="subtask-row" data-phase="6"><td colspan="5"><strong>accessibility</strong> - <a href="https://www.w3.org/TR/WCAG21/">WCAG 2.1</a> compliance: perceivable, operable, understandable, robust</td></tr>
+        <tr class="subtask-row" data-phase="6"><td colspan="5"><strong>seo</strong> - SEO: technical SEO, meta tags, structured data, crawlability</td></tr>
+        <tr class="subtask-row" data-phase="6"><td colspan="5"><strong>best-practices</strong> - Security headers, modern APIs, browser compatibility</td></tr>
+        <tr class="subtask-row" data-phase="6"><td colspan="5"><strong>web-design-guidelines</strong> - <a href="https://github.com/vercel-labs/web-interface-guidelines">Web Interface Guidelines</a>: compliance review for UI code and accessibility</td></tr>
         <tr class="subtask-row" data-phase="6"><td colspan="5"><strong>research</strong> - 6-agent parallel deep research: explore → 6 research agents → consensus analysis</td></tr>
         <tr class="subtask-row" data-phase="6"><td colspan="5"><strong>interactive-plan</strong> - HTML architecture docs: Mermaid diagrams, phase tracking, inline feedback</td></tr>
 
@@ -736,14 +744,24 @@ flowchart LR
         <tr class="ref-group"><td colspan="2">Configuration</td></tr>
         <tr><td class="file-path">~/.claude/settings.json</td><td class="ref-desc">Permissions (6 MCP allow rules), hooks config, 17 enabled plugins</td></tr>
 
-        <tr class="ref-group"><td colspan="2">Layer 6: Skills</td></tr>
+        <tr class="ref-group"><td colspan="2">Layer 6: Skills — Framework</td></tr>
         <tr><td class="file-path">~/.claude/skills/ss-dev/SKILL.md</td><td class="ref-desc">SilverStripe development patterns</td></tr>
         <tr><td class="file-path">~/.claude/skills/wp-dev/SKILL.md</td><td class="ref-desc">WordPress development patterns</td></tr>
         <tr><td class="file-path">~/.claude/skills/nuxt-dev/SKILL.md</td><td class="ref-desc">Nuxt 3/4 development patterns</td></tr>
         <tr><td class="file-path">~/.claude/skills/next-best-practices/SKILL.md</td><td class="ref-desc">Next.js best practices (+ 19 reference files)</td></tr>
         <tr><td class="file-path">~/.claude/skills/vercel-react-best-practices/SKILL.md</td><td class="ref-desc">React/Next.js performance (57 rules in rules/)</td></tr>
         <tr><td class="file-path">~/.claude/skills/supabase-postgres-best-practices/SKILL.md</td><td class="ref-desc">Postgres optimization (30 rules in references/)</td></tr>
-        <tr><td class="file-path">~/.claude/skills/web-design-guidelines/SKILL.md</td><td class="ref-desc">Web Interface Guidelines compliance review</td></tr>
+
+        <tr class="ref-group"><td colspan="2">Layer 6: Skills — Web Quality (<a href="https://github.com/addyosmani/web-quality-skills">addyosmani/web-quality-skills</a>)</td></tr>
+        <tr><td class="file-path">~/.claude/skills/web-quality-audit/SKILL.md</td><td class="ref-desc">Lighthouse-based comprehensive audit (150+ checks)</td></tr>
+        <tr><td class="file-path">~/.claude/skills/performance/SKILL.md</td><td class="ref-desc">Web performance optimization</td></tr>
+        <tr><td class="file-path">~/.claude/skills/core-web-vitals/SKILL.md</td><td class="ref-desc">LCP, INP, CLS optimization</td></tr>
+        <tr><td class="file-path">~/.claude/skills/accessibility/SKILL.md</td><td class="ref-desc">WCAG 2.1 compliance audit</td></tr>
+        <tr><td class="file-path">~/.claude/skills/seo/SKILL.md</td><td class="ref-desc">Search engine optimization</td></tr>
+        <tr><td class="file-path">~/.claude/skills/best-practices/SKILL.md</td><td class="ref-desc">Security headers, modern APIs, browser compatibility</td></tr>
+
+        <tr class="ref-group"><td colspan="2">Layer 6: Skills — Utility</td></tr>
+        <tr><td class="file-path">~/.claude/skills/web-design-guidelines/SKILL.md</td><td class="ref-desc"><a href="https://github.com/vercel-labs/web-interface-guidelines">Web Interface Guidelines</a> compliance review</td></tr>
         <tr><td class="file-path">~/.claude/skills/research/SKILL.md</td><td class="ref-desc">6-agent parallel deep research with consensus</td></tr>
         <tr><td class="file-path">~/.claude/skills/interactive-plan/SKILL.md</td><td class="ref-desc">HTML architecture document generator</td></tr>
 
