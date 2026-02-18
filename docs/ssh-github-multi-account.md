@@ -7,7 +7,7 @@
 | Key | Purpose |
 |-----|---------|
 | `id_rsa_mac` | Personal GitHub account |
-| `id_rsa_basis_mac` | Work GitHub account |
+| `id_rsa_work_mac` | Work GitHub account |
 
 ### `~/.ssh/config`
 
@@ -17,7 +17,7 @@ Host github.com
 
 Host github.com-<WORK_GH_USERNAME>
     HostName github.com
-    IdentityFile ~/.ssh/id_rsa_basis_mac
+    IdentityFile ~/.ssh/id_rsa_work_mac
 ```
 
 ### `~/.ssh/config.local`
@@ -44,7 +44,7 @@ git clone git@github.com-<WORK_GH_USERNAME>:<WORK_ORG>/work-repo.git
     email = <PERSONAL_EMAIL>
 
 [includeIf "gitdir:~/workstation/work/"]
-    path = ~/.gitconfig-basis
+    path = ~/.gitconfig-work
 ```
 
 Any repo under `~/workstation/work/` automatically uses the work email. Everything else uses the personal email.

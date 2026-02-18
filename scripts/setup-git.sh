@@ -21,16 +21,14 @@ git config --global push.followTags true
 git config --global color.ui auto
 
 # Work-specific gitconfig
-cat > "$HOME/.gitconfig-basis" <<EOF
+cat > "$HOME/.gitconfig-work" <<EOF
 [user]
     name = ${WS_FULL_NAME}
     email = ${WS_WORK_EMAIL}
 EOF
 
-# Conditional includes for work repos (multiple possible locations)
-git config --global --replace-all includeIf."gitdir:~/workstation/work/".path "~/.gitconfig-basis"
-git config --global --add includeIf."gitdir:~/work/basis/".path "~/.gitconfig-basis"
-git config --global --add includeIf."gitdir:~/Documents/basis/".path "~/.gitconfig-basis"
+# Conditional include for work repos
+git config --global --replace-all includeIf."gitdir:~/workstation/work/".path "~/.gitconfig-work"
 
 # Global gitignore
 cat > "$HOME/.gitignore_global" <<'EOF'

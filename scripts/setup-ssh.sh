@@ -22,8 +22,8 @@ generate_key() {
     fi
 }
 
-generate_key id_rsa_mac       "personal GitHub"  rsa
-generate_key id_rsa_basis_mac "work GitHub"      rsa
+generate_key id_rsa_mac      "personal GitHub"  rsa
+generate_key id_rsa_work_mac "work GitHub"      rsa
 
 # Write ~/.ssh/config (portable, no machine-specific paths)
 cat > "$SSH_DIR/config" <<EOF
@@ -40,12 +40,6 @@ Host github.com-${WS_WORK_GH_USER}
     User git
     IdentitiesOnly yes
     # Key path specified in config.local (machine-specific)
-
-# Pantheon
-Host codeserver.dev.*.drush.in
-    Port 2222
-    IdentitiesOnly yes
-    IdentityFile ~/.ssh/id_rsa_oneoff
 
 # Common SSH settings
 Host *
@@ -69,7 +63,7 @@ Host github.com
 
 # Work GitHub - Mac key
 Host github.com-${WS_WORK_GH_USER}
-    IdentityFile ~/.ssh/id_rsa_basis_mac
+    IdentityFile ~/.ssh/id_rsa_work_mac
     UseKeychain yes
 EOF
     else
@@ -80,7 +74,7 @@ Host github.com
 
 # Work GitHub
 Host github.com-${WS_WORK_GH_USER}
-    IdentityFile ~/.ssh/id_rsa_basis_mac
+    IdentityFile ~/.ssh/id_rsa_work_mac
 EOF
     fi
     chmod 600 "$SSH_DIR/config.local"
@@ -88,7 +82,7 @@ fi
 
 # Add keys to ssh-agent
 eval "$(ssh-agent -s)" >/dev/null 2>&1 || true
-for key in id_rsa_mac id_rsa_basis_mac; do
+for key in id_rsa_mac id_rsa_work_mac; do
     KEY_PATH="$SSH_DIR/$key"
     [ -f "$KEY_PATH" ] || continue
     if [ "$(uname -s)" = "Darwin" ]; then
@@ -101,7 +95,7 @@ done
 echo ""
 echo "--- Public keys ---"
 echo ""
-for key in id_rsa_mac id_rsa_basis_mac; do
+for key in id_rsa_mac id_rsa_work_mac; do
     [ -f "$SSH_DIR/${key}.pub" ] || continue
     echo "== $key =="
     cat "$SSH_DIR/${key}.pub"
