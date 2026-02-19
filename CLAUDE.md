@@ -43,6 +43,7 @@ claude/
     CLAUDE.md               # Global Claude instructions -> ~/.claude/CLAUDE.md
     RTK.md                  # RTK reference -> ~/.claude/RTK.md
     settings.json           # Permissions, hooks, plugins -> ~/.claude/settings.json
+    settings.local.json     # Per-machine overrides -> ~/.claude/settings.local.json
   skills/                   # All skills -> ~/.claude/skills/
   hooks/                    # Hook scripts -> ~/.claude/hooks/
 docs/

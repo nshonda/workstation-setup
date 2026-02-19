@@ -12,7 +12,7 @@ cd ~/workstation/personal/workstation-setup
 
 ## What It Does
 
-1. **Dependencies** — installs gh, jq, direnv, cloudflared, RTK via brew (macOS) or apt (Linux)
+1. **Dependencies** — installs gh, jq, direnv, gcloud, RTK via brew (macOS) or apt (Linux); cloudflared on macOS only
 2. **SSH** — generates keys for personal + work GitHub accounts with host aliases
 3. **Git** — configures identity with conditional includes (work email for `~/workstation/work/`)
 4. **GitHub CLI** — authenticates both accounts, installs auto-switch wrapper

@@ -20,9 +20,10 @@ cd ~/workstation/personal/workstation-setup
 ```
 
 The setup script detects WSL/Linux automatically and:
-- Installs gh, jq, direnv, openssh-client, git via apt
+- Installs gh, jq, direnv, openssh-client, git, google-cloud-cli via apt
+- Installs credential management deps (libsecret-tools, gnome-keyring, dbus-x11)
 - Sets `core.autocrlf input` to prevent line ending issues
-- Installs RTK via cargo if Rust is available
+- Installs RTK via install script (no Rust required)
 
 ## Claude Code in WSL
 
