@@ -243,6 +243,13 @@ if [[ -d "$CLAUDE_DIR/hooks" ]]; then
     echo "Deployed hooks to ~/.claude/hooks/"
 fi
 
+# Hookify rules — copy *.local.md files
+for rule in "$CLAUDE_DIR/config"/hookify.*.local.md; do
+    [[ -f "$rule" ]] || continue
+    cp "$rule" ~/.claude/
+    echo "Deployed ~/.claude/$(basename "$rule")"
+done
+
 # ---------- 6. Register MCP servers in ~/.claude.json ----------
 
 echo ""
