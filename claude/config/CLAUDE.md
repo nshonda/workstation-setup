@@ -68,7 +68,7 @@ Invoke skills by context — do not wait for slash commands. Match the user's in
 - Security headers, modern APIs, best practices → `best-practices`
 
 **Research:**
-- Deep investigation of a codebase question or architecture decision → `research`
+- User says "research", "investigate", "deep dive", or asks to thoroughly explore a topic, codebase question, architecture decision, or implementation approach → `research`
 
 **Utilities:**
 - Generate visual architecture plan → `interactive-plan`
