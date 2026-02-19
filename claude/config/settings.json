@@ -21,6 +21,17 @@
           }
         ]
       }
+    ],
+    "UserPromptSubmit": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node $HOME/.claude/hooks/replay-learnings.js"
+          }
+        ]
+      }
     ]
   },
   "enabledPlugins": {
