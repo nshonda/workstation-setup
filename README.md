@@ -16,7 +16,7 @@ cd ~/workstation/personal/workstation-setup
 2. **SSH** — generates keys for personal + work GitHub accounts with host aliases
 3. **Git** — configures identity with conditional includes (work email for `~/workstation/work/`)
 4. **GitHub CLI** — authenticates both accounts, installs auto-switch wrapper
-5. **Claude Code** (optional) — deploys config, skills, hooks, MCP servers, plugins
+5. **Claude Code** (optional) — deploys config, skills, hooks, MCP servers, plugins; global config includes subagent rules that propagate tool priority (context7, MCP servers) and conventions to all spawned subagents
 
 ## Repo Structure
 
