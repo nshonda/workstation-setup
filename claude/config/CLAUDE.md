@@ -81,6 +81,16 @@ Invoke skills by context — do not wait for slash commands. Match the user's in
 - Search past learnings → `search`
 - Session handoff document → `handoff`
 
+## Subagent Model Routing
+
+When using the Task tool, match the model to task complexity:
+
+- **haiku** — simple file lookups, grep searches, straightforward single-file edits, quick code generation
+- **sonnet** — multi-file changes, moderate refactors, standard feature work, code review
+- **opus** — architectural decisions, complex debugging, security-sensitive code, cross-cutting changes
+
+Default to haiku when unsure — escalate only when the task clearly needs deeper reasoning.
+
 ## Git Commits
 
 - NEVER add `Co-Authored-By: Claude` (or any Claude co-author line) to commit messages.
