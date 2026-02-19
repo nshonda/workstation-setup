@@ -310,6 +310,18 @@ if command -v claude &>/dev/null; then
     claude plugins add anthropics/claude-plugins-official 2>/dev/null || true
     claude plugins add rohitg00/pro-workflow 2>/dev/null || true
     echo "Plugins installed"
+
+    # Build pro-workflow SQLite store (plugin ships uncompiled TypeScript)
+    PRO_WORKFLOW_CACHE=$(find ~/.claude/plugins/cache/pro-workflow -maxdepth 2 -name "package.json" -exec dirname {} \; 2>/dev/null | head -1)
+    if [[ -n "$PRO_WORKFLOW_CACHE" && ! -d "$PRO_WORKFLOW_CACHE/dist" ]]; then
+        echo "Building pro-workflow SQLite store..."
+        (cd "$PRO_WORKFLOW_CACHE" && npm install --ignore-scripts && npx tsc) 2>&1 | tail -3
+        if [[ -f "$PRO_WORKFLOW_CACHE/dist/db/store.js" ]]; then
+            echo "pro-workflow SQLite store built successfully"
+        else
+            echo "WARNING: pro-workflow build failed — /learn and /wrap-up won't persist to SQLite"
+        fi
+    fi
 else
     echo "Claude Code CLI not found — install it first, then run:"
     echo "  claude plugins add anthropics/claude-plugins-official"

@@ -44,6 +44,9 @@ Invoke skills by context — do not wait for slash commands. Match the user's in
 **Debugging:**
 - Any bug, test failure, or unexpected behavior → `superpowers:systematic-debugging`
 
+**Documentation:**
+- Writing docs, changelogs, READMEs, ADRs, release notes, or documenting changes → `docs`
+
 **Finishing work:**
 - About to claim work is done/fixed/passing → `superpowers:verification-before-completion`
 - Want code reviewed before merging → `superpowers:requesting-code-review`
