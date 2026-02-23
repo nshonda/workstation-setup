@@ -92,10 +92,6 @@ elif echo "$FIRST_CMD" | grep -qE '^(npx[[:space:]]+)?eslint([[:space:]]|$)'; th
   REWRITTEN=$(echo "$CMD" | sed -E 's/^(npx )?eslint/rtk lint/')
 elif echo "$FIRST_CMD" | grep -qE '^(npx[[:space:]]+)?prettier([[:space:]]|$)'; then
   REWRITTEN=$(echo "$CMD" | sed -E 's/^(npx )?prettier/rtk prettier/')
-elif echo "$FIRST_CMD" | grep -qE '^(npx[[:space:]]+)?playwright([[:space:]]|$)'; then
-  REWRITTEN=$(echo "$CMD" | sed -E 's/^(npx )?playwright/rtk playwright/')
-elif echo "$FIRST_CMD" | grep -qE '^pnpm[[:space:]]+playwright([[:space:]]|$)'; then
-  REWRITTEN=$(echo "$CMD" | sed 's/^pnpm playwright/rtk playwright/')
 elif echo "$FIRST_CMD" | grep -qE '^(npx[[:space:]]+)?prisma([[:space:]]|$)'; then
   REWRITTEN=$(echo "$CMD" | sed -E 's/^(npx )?prisma/rtk prisma/')
 

@@ -269,12 +269,6 @@ MCP_SERVERS='{
     "command": "'"$HOME"'/.local/bin/mcp-redmine-wrapper",
     "args": []
   },
-  "chrome-devtools": {
-    "type": "stdio",
-    "command": "npx",
-    "args": ["chrome-devtools-mcp@latest", "--isolated"],
-    "env": {}
-  }
 }'
 
 # Add Context7 if API key was provided
@@ -480,7 +474,7 @@ echo ""
 echo "MCP servers:"
 echo "  - jira-work: Jira + Confluence (Atlassian)"
 echo "  - redmine-personal: Redmine issue tracking"
-echo "  - chrome-devtools: Browser automation and debugging"
+echo "  - openbrowser: Browser automation (via plugin)"
 if [[ -n "$CONTEXT7_KEY" ]]; then
 echo "  - context7: Library documentation lookup"
 fi

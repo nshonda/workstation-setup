@@ -18,7 +18,7 @@ Always prefer integrated tools (MCP servers, plugins, skills) over manual altern
 - **Plugins and skills** over manual multi-step workflows (e.g., use commit-commands plugin over hand-rolling git commands)
 - **GitHub MCP** over `gh` CLI for GitHub operations (PRs, issues, repos) — token is set per-directory via direnv (personal vs work)
 - **context7** over web searches for library/framework documentation and code examples
-- **chrome-devtools** for browser automation, testing, screenshots, performance profiling. Always launch with `--isolated` to avoid conflicts with existing browser instances
+- **openbrowser** for browser automation, testing, screenshots, form filling, web scraping, and accessibility audits
 - **Jira MCP** for all Jira interactions (issues, sprints, boards)
 - **Redmine MCP** for all Redmine interactions
 
@@ -37,6 +37,7 @@ Invoke skills by context — do not wait for slash commands. Match the user's in
 - Implementing any feature or bugfix → `superpowers:test-driven-development`
 - Guided feature development with architecture focus → `feature-dev:feature-dev`
 - Building frontend/UI components or pages → `frontend-design:frontend-design`
+- Building apps with Claude API / Anthropic SDK → `claude-developer-platform`
 - Executing a written plan with independent tasks → `superpowers:subagent-driven-development`
 - Executing a plan from a separate session → `superpowers:executing-plans`
 - 2+ independent tasks that can run in parallel → `superpowers:dispatching-parallel-agents`
@@ -52,9 +53,11 @@ Invoke skills by context — do not wait for slash commands. Match the user's in
 - Want code reviewed before merging → `superpowers:requesting-code-review`
 - Reviewing a PR → `pr-review-toolkit:review-pr` or `code-review:code-review`
 - Received code review feedback → `superpowers:receiving-code-review`
-- Ready to commit → `commit-commands:commit`
+- Ready to commit → `pro-workflow:commit`
+- Quick commit, skip quality checks → `commit-commands:commit`
 - Ready to commit + push + open PR → `commit-commands:commit-push-pr`
 - Implementation complete, deciding how to integrate → `superpowers:finishing-a-development-branch`
+- Clean up local branches deleted on remote → `commit-commands:clean_gone`
 
 **Framework & stack detection (auto-invoke when working in matching project):**
 - SilverStripe project detected → `ss-dev`
@@ -73,16 +76,30 @@ Invoke skills by context — do not wait for slash commands. Match the user's in
 **Research:**
 - User says "research", "investigate", "deep dive", or asks to thoroughly explore a topic, codebase question, architecture decision, or implementation approach → `research`
 
+**Hookify (hook management):**
+- Create hooks from conversation analysis or explicit instructions → `hookify:hookify`
+- Write or edit hookify rule files → `hookify:writing-rules`
+- List configured hookify rules → `hookify:list`
+- Enable/disable hookify rules interactively → `hookify:configure`
+- Get help with hookify → `hookify:help`
+
 **Utilities:**
 - Generate visual architecture plan → `interactive-plan`
 - Creating or editing skills → `superpowers:writing-skills`
 - Audit/improve CLAUDE.md files → `claude-md-management:claude-md-improver`
+- Update CLAUDE.md with session learnings → `claude-md-management:revise-claude-md`
 - Customize keyboard shortcuts → `keybindings-help`
 - Recommend Claude Code automations → `claude-code-setup:claude-automation-recommender`
-- Session wrap-up → `wrap-up`
-- Save a learning → `learn`
-- Search past learnings → `search`
-- Session handoff document → `handoff`
+- Session wrap-up → `pro-workflow:wrap-up`
+- Battle-tested Claude Code workflows → `pro-workflow:pro-workflow`
+- Save a learning → `pro-workflow:learn`
+- Search past learnings → `pro-workflow:search`
+- List all learnings → `pro-workflow:list`
+- Surface past learnings for current task → `pro-workflow:replay`
+- Session & learning analytics → `pro-workflow:insights`
+- Extract correction to memory → `pro-workflow:learn-rule`
+- Worktree setup guide → `pro-workflow:parallel`
+- Session handoff document → `pro-workflow:handoff`
 
 ## Subagent Rules
 

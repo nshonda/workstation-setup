@@ -2,11 +2,10 @@
   "permissions": {
     "allow": [
       "mcp__context7__*",
-      "mcp__chrome-devtools__*",
       "mcp__jira-work__*",
       "mcp__redmine-personal__*",
       "mcp__github__*",
-      "mcp__plugin_playwright_playwright__*",
+      "mcp__plugin_openbrowser_openbrowser__*",
       "mcp__supabase__*"
     ]
   },
@@ -42,7 +41,7 @@
     "code-simplifier@claude-plugins-official": true,
     "superpowers@claude-plugins-official": true,
     "typescript-lsp@claude-plugins-official": true,
-    "playwright@claude-plugins-official": true,
+    "openbrowser@openbrowser-ai": true,
     "commit-commands@claude-plugins-official": true,
     "security-guidance@claude-plugins-official": true,
     "pr-review-toolkit@claude-plugins-official": true,
