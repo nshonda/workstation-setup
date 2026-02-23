@@ -48,7 +48,6 @@ All scripts are idempotent. Re-run `./setup.sh` or any individual script to upda
 |--------|---------|
 | [mcp-atlassian](https://github.com/sooperset/mcp-atlassian) | Jira + Confluence integration |
 | [mcp-redmine](https://github.com/runekaagaard/mcp-redmine) | Redmine issue tracking |
-| [chrome-devtools-mcp](https://github.com/ChromeDevTools/chrome-devtools-mcp) | Browser automation, screenshots, performance profiling |
 | [Context7](https://context7.com/) | Library/framework documentation lookup |
 
 ### Claude Code Plugins
@@ -69,7 +68,7 @@ From [claude-plugins-official](https://github.com/anthropics/claude-plugins-offi
 | [claude-md-management](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/claude-md-management) | Audit and improve CLAUDE.md files |
 | [claude-code-setup](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/claude-code-setup) | Recommend Claude Code automations for a project |
 | [github](https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/github) | GitHub MCP server (issues, PRs, repos) |
-| [playwright](https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/playwright) | Browser automation and testing |
+| [openbrowser](https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/openbrowser) | Browser automation, testing, screenshots, web scraping |
 | [supabase](https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/supabase) | Supabase integration |
 | [typescript-lsp](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/typescript-lsp) | TypeScript language server |
 | [php-lsp](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/php-lsp) | PHP language server |
