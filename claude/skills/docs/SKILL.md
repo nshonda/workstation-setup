@@ -67,8 +67,8 @@ For explaining how things work — READMEs, API docs, architecture docs.
 | Type | Where | When to update |
 |------|-------|----------------|
 | README | Project root `README.md` | New setup steps, changed commands, new features |
-| API docs | Near the code or `docs/` | New/changed endpoints, params, responses |
-| Architecture | `docs/` or `_research/` | Structural changes, new components, new patterns |
+| API docs | Near the code | New/changed endpoints, params, responses |
+| Architecture | `_research/` | Structural changes, new components, new patterns |
 | Config reference | README or dedicated file | New env vars, new settings, changed defaults |
 
 **README update pattern:**

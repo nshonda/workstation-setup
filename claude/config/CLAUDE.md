@@ -147,5 +147,6 @@ To generate from Jira MCP issue data:
 - Use `_research/` at the project root for dev research notes, architecture docs, and planning context. This folder is for local development only and must always be gitignored.
 - When starting a task, read all files in `_research/` for project context — treat them as extensions of CLAUDE.md.
 - When doing research or planning for a project, save notes and findings to `_research/` as markdown files.
+- **Override plugin defaults:** Skills/plugins that write to `docs/plans/` (e.g., `writing-plans`, `brainstorming`, `subagent-driven-development`) MUST use `_research/` instead. Replace `docs/plans/YYYY-MM-DD-<name>.md` with `_research/YYYY-MM-DD-<name>.md`. Never create a `docs/plans/` directory.
 
 @RTK.md
