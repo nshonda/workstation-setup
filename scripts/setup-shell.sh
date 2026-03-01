@@ -128,12 +128,26 @@ else
         unzip -o "$FONT_ZIP" -d "$FONT_DIR" '*.ttf'
         rm -f "$FONT_ZIP"
         fc-cache -f
-        echo "JetBrainsMono Nerd Font installed"
+        echo "JetBrainsMono Nerd Font installed (Linux)"
     fi
-    echo ""
-    echo "NOTE: If using Windows Terminal (WSL), install the font separately on Windows."
-    echo "  Download from: https://github.com/ryanoasis/nerd-fonts/releases"
-    echo "  Then set 'JetBrainsMono Nerd Font' in Windows Terminal settings."
+    # Copy fonts to Windows if running under WSL
+    if [[ -d "/mnt/c" ]]; then
+        WIN_USER="$(cmd.exe /C "echo %USERNAME%" 2>/dev/null | tr -d '\r')"
+        if [[ -n "$WIN_USER" ]]; then
+            WIN_FONT_DIR="/mnt/c/Users/${WIN_USER}/AppData/Local/Microsoft/Windows/Fonts"
+            if [[ ! -f "$WIN_FONT_DIR/JetBrainsMonoNerdFont-Regular.ttf" ]]; then
+                echo "Copying fonts to Windows..."
+                mkdir -p "$WIN_FONT_DIR"
+                cp "$FONT_DIR"/JetBrainsMonoNerdFont*.ttf "$WIN_FONT_DIR/" 2>/dev/null || true
+                echo "Fonts copied to $WIN_FONT_DIR"
+                echo "Set 'JetBrainsMono Nerd Font' in Windows Terminal → Settings → Profile → Appearance → Font"
+            else
+                echo "Fonts already present in Windows"
+            fi
+        else
+            echo "WARNING: Could not detect Windows username. Install fonts manually on Windows."
+        fi
+    fi
 fi
 
 # ---------- 7. Configure .zshrc ----------
