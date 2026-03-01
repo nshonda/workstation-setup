@@ -44,6 +44,9 @@ case "$(uname -s)" in
         ;;
 esac
 
+# Shell environment (zsh, plugins, font, .zshrc)
+"$SCRIPT_DIR/setup-shell.sh"
+
 # SSH + Git + GitHub CLI
 "$SCRIPT_DIR/setup-ssh.sh"
 "$SCRIPT_DIR/setup-git.sh"

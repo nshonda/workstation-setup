@@ -38,7 +38,4 @@ else
     echo "cargo not found — skipping rtk install (install Rust from https://rustup.rs)"
 fi
 
-# Create workspace directories
-mkdir -p ~/workstation/personal ~/workstation/work
-
 echo "--- macOS setup done ---"

@@ -30,9 +30,6 @@ else
     echo "gcloud installed — run 'gcloud auth login' to authenticate"
 fi
 
-# Line ending handling
-git config --global core.autocrlf input
-
 # RTK (Rust Token Killer) — install via official script (no Rust required)
 if command -v rtk &>/dev/null; then
     echo "rtk already installed ($(rtk --version))"
@@ -40,8 +37,5 @@ else
     echo "Installing rtk..."
     curl -fsSL https://raw.githubusercontent.com/rtk-ai/rtk/refs/heads/master/install.sh | sh
 fi
-
-# Create workspace directories
-mkdir -p ~/workstation/personal ~/workstation/work
 
 echo "--- WSL/Linux setup done ---"

@@ -10,6 +10,7 @@ Script-driven workstation setup for multi-GitHub account development. Sets up SS
 ./setup.sh                      # Full setup (interactive)
 ./scripts/setup-mac.sh          # macOS dependencies only
 ./scripts/setup-wsl.sh          # WSL/Linux dependencies only
+./scripts/setup-shell.sh        # Shell env: zsh, OMZ, Spaceship, nvm, font
 ./scripts/setup-ssh.sh          # SSH keys for GitHub accounts
 ./scripts/setup-git.sh          # Git identity + conditional includes
 ./scripts/setup-gh.sh           # GitHub CLI multi-account auth
@@ -23,6 +24,7 @@ Script-driven workstation setup for multi-GitHub account development. Sets up SS
 - **SSH**: Two RSA keys (personal GitHub, work GitHub) with host aliases
 - **Git**: Conditional identity via `includeIf` — work email for `~/workstation/work/`
 - **GitHub CLI**: `gh` auto-switches between personal and work accounts via shell wrapper
+- **Shell**: zsh + Oh My Zsh + Spaceship theme + nvm + JetBrainsMono Nerd Font
 - **Direnv**: Per-directory env vars — `GITHUB_TOKEN`, Jira/Redmine creds switch automatically
 - **Claude Code**: Config, skills, hooks deployed to `~/.claude/`; MCP servers registered in `~/.claude.json`
 
@@ -33,6 +35,7 @@ setup.sh                    # Entry point
 scripts/
   setup-mac.sh              # macOS deps (brew)
   setup-wsl.sh              # WSL/Linux deps (apt)
+  setup-shell.sh            # Shell env (zsh, OMZ, Spaceship, nvm, font)
   setup-ssh.sh              # SSH keygen + config
   setup-git.sh              # Git identity + conditional includes
   setup-gh.sh               # GitHub CLI multi-account auth
