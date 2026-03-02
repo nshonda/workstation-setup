@@ -274,7 +274,7 @@ MCP_SERVERS='{
     "type": "stdio",
     "command": "'"$HOME"'/.local/bin/mcp-redmine-wrapper",
     "args": []
-  },
+  }
 }'
 
 # Add Context7 if API key was provided
