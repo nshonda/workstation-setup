@@ -1,4 +1,12 @@
 {
+  "extraKnownMarketplaces": {
+    "openbrowser-ai": {
+      "source": {
+        "source": "github",
+        "repo": "billy-enrizky/openbrowser-ai"
+      }
+    }
+  },
   "permissions": {
     "allow": [
       "mcp__context7__*",
