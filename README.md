@@ -68,7 +68,6 @@ From [claude-plugins-official](https://github.com/anthropics/claude-plugins-offi
 | [claude-md-management](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/claude-md-management) | Audit and improve CLAUDE.md files |
 | [claude-code-setup](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/claude-code-setup) | Recommend Claude Code automations for a project |
 | [github](https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/github) | GitHub MCP server (issues, PRs, repos) |
-| [openbrowser](https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/openbrowser) | Browser automation, testing, screenshots, web scraping |
 | [supabase](https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/supabase) | Supabase integration |
 | [typescript-lsp](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/typescript-lsp) | TypeScript language server |
 | [php-lsp](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/php-lsp) | PHP language server |
@@ -77,6 +76,7 @@ Third-party:
 
 | Plugin | Purpose |
 |--------|---------|
+| [openbrowser](https://github.com/billy-enrizky/openbrowser-ai) | Browser automation, testing, screenshots, web scraping |
 | [pro-workflow](https://github.com/rohitg00/pro-workflow) | Session management, learning capture, smart commits |
 
 ### Claude Code Skills (bundled)
