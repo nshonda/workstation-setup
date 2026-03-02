@@ -13,9 +13,9 @@ export SUBAGENT_CATALOG_TTL_SECONDS SUBAGENT_CATALOG_CACHE_FILE SUBAGENT_CATALOG
 
 # --- HELPERS ---
 
-# get file mtime as epoch seconds
+# get file mtime as epoch seconds (cross-platform: macOS + Linux)
 subagent_catalog_get_mtime() {
-  date -r "$1" +%s
+  stat -f %m "$1" 2>/dev/null || stat -c %Y "$1"
 }
 
 # logging helpers
