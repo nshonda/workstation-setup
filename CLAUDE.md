@@ -26,7 +26,7 @@ Script-driven workstation setup for multi-GitHub account development. Sets up SS
 - **GitHub CLI**: `gh` auto-switches between personal and work accounts via shell wrapper
 - **Shell**: zsh + Oh My Zsh + Spaceship theme + nvm + JetBrainsMono Nerd Font
 - **Direnv**: Per-directory env vars — `GITHUB_TOKEN`, Jira/Redmine creds switch automatically
-- **Claude Code**: Config, skills, hooks deployed to `~/.claude/`; MCP servers registered in `~/.claude.json`
+- **Claude Code**: Config, skills, hooks, agents deployed to `~/.claude/`; MCP servers registered in `~/.claude.json`
 
 ## Structure
 
@@ -48,6 +48,7 @@ claude/
     settings.json           # Permissions, hooks, plugins -> ~/.claude/settings.json
     settings.local.json     # Per-machine overrides -> ~/.claude/settings.local.json
   skills/                   # All skills -> ~/.claude/skills/
+  agents/                   # Subagent definitions -> ~/.claude/agents/
   hooks/                    # Hook scripts -> ~/.claude/hooks/
 docs/
   ssh-github-multi-account.md

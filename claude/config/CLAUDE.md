@@ -38,6 +38,9 @@ Invoke skills by context — do not wait for slash commands. Match the user's in
 - Guided feature development with architecture focus → `feature-dev:feature-dev`
 - Building frontend/UI components or pages → `frontend-design:frontend-design`
 - Building apps with Claude API / Anthropic SDK → `claude-developer-platform`
+- Building MCP servers (Python/TypeScript) → `mcp-builder`
+- Creating or improving skills with evals/benchmarks → `skill-creator`
+- Testing web apps with Playwright → `webapp-testing`
 - Executing a written plan with independent tasks → `superpowers:subagent-driven-development`
 - Executing a plan from a separate session → `superpowers:executing-plans`
 - 2+ independent tasks that can run in parallel → `superpowers:dispatching-parallel-agents`
@@ -82,6 +85,20 @@ Invoke skills by context — do not wait for slash commands. Match the user's in
 - List configured hookify rules → `hookify:list`
 - Enable/disable hookify rules interactively → `hookify:configure`
 - Get help with hookify → `hookify:help`
+
+**Specialist agents (spawned as subagents via Task tool into ~/.claude/agents/):**
+- Architecture review, DDD, CQRS, tech debt assessment → `architect-reviewer` (opus)
+- Building/debugging MCP servers and clients → `mcp-developer` (sonnet)
+- Prompt design, optimization, A/B testing for LLMs → `prompt-engineer` (sonnet)
+- Developer experience optimization (build times, HMR, test speed) → `dx-optimizer` (sonnet)
+- Extracting patterns and learnings from completed workflows → `knowledge-synthesizer` (sonnet)
+- Browse/install agents from VoltAgent catalog → `/subagent-catalog:search`, `/subagent-catalog:fetch`
+
+**Document manipulation:**
+- PDF operations (merge, split, OCR, watermark, form fill) → `pdf`
+- Word document creation/editing → `docx`
+- Excel spreadsheet creation/editing → `xlsx`
+- PowerPoint creation/editing → `pptx`
 
 **Utilities:**
 - Generate visual architecture plan → `interactive-plan`

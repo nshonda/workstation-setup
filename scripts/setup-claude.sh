@@ -187,7 +187,7 @@ echo "Created ~/.local/bin/mcp-redmine-wrapper"
 echo ""
 echo "--- Deploying Claude Code config ---"
 
-mkdir -p ~/.claude/hooks ~/.claude/skills
+mkdir -p ~/.claude/hooks ~/.claude/skills ~/.claude/agents
 
 # CLAUDE.md
 if [[ -f "$CLAUDE_DIR/config/CLAUDE.md" ]]; then
@@ -234,6 +234,12 @@ if [[ -d "$CLAUDE_DIR/skills" ]]; then
         rm -f ~/.claude/skills/interactive-plan/SKILL.md.bak
     fi
     echo "Deployed skills to ~/.claude/skills/"
+fi
+
+# Agents — copy all
+if [[ -d "$CLAUDE_DIR/agents" ]]; then
+    cp -R "$CLAUDE_DIR/agents/"* ~/.claude/agents/ 2>/dev/null || true
+    echo "Deployed agents to ~/.claude/agents/"
 fi
 
 # Hooks — copy all, chmod +x
@@ -303,6 +309,9 @@ echo "--- Installing plugins ---"
 if command -v claude &>/dev/null; then
     claude plugins add anthropics/claude-plugins-official 2>/dev/null || true
     claude plugins add rohitg00/pro-workflow 2>/dev/null || true
+    claude plugins add anthropics/skills 2>/dev/null || true
+    claude plugins install document-skills@anthropic-agent-skills 2>/dev/null || true
+    claude plugins install example-skills@anthropic-agent-skills 2>/dev/null || true
     echo "Plugins installed"
 
     # Build pro-workflow SQLite store (plugin ships uncompiled TypeScript)
@@ -320,6 +329,9 @@ else
     echo "Claude Code CLI not found — install it first, then run:"
     echo "  claude plugins add anthropics/claude-plugins-official"
     echo "  claude plugins add rohitg00/pro-workflow"
+    echo "  claude plugins add anthropics/skills"
+    echo "  claude plugins install document-skills@anthropic-agent-skills"
+    echo "  claude plugins install example-skills@anthropic-agent-skills"
 fi
 
 # ---------- 8. Create direnv .envrc files ----------
@@ -464,6 +476,7 @@ echo "What was configured:"
 echo "  - Credentials stored in system keychain"
 echo "  - MCP wrapper scripts at ~/.local/bin/"
 echo "  - Claude config deployed to ~/.claude/"
+echo "  - Agents deployed to ~/.claude/agents/"
 echo "  - MCP servers registered in ~/.claude.json"
 if command -v claude &>/dev/null; then
 echo "  - Plugins installed"
