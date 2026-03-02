@@ -3,6 +3,15 @@ set -euo pipefail
 
 echo "--- WSL/Linux setup ---"
 
+# GitHub CLI apt repo (needed for gh on older Ubuntu)
+if ! apt-cache show gh &>/dev/null 2>&1; then
+    echo "Adding GitHub CLI apt repo..."
+    sudo mkdir -p -m 755 /etc/apt/keyrings
+    curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg >/dev/null
+    sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list >/dev/null
+fi
+
 # Install dependencies
 sudo apt-get update -qq
 for pkg in openssh-client git gh jq direnv libsecret-tools gnome-keyring dbus-x11; do

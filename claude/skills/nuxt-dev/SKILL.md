@@ -93,11 +93,11 @@ export const useCounterStore = defineStore('counter', () => {
 
 Read the project's CLAUDE.md for:
 - Nuxt version (3 vs 4) and directory structure (`app/` vs root)
-- Layer system (e.g., `@cooperco` layers in CBR3/FamilyCord)
-- CMS integration (Contentful GraphQL, etc.)
+- Layer system (shared layers, monorepo packages)
+- CMS integration (Contentful, Strapi, etc.)
 - Component library (PrimeVue, Nuxt UI, etc.)
-- Auth pattern (Cognito, cookies, sessions)
-- Deployment target (AWS ECS, Vercel, etc.)
+- Auth pattern (OAuth, cookies, sessions)
+- Deployment target (Vercel, AWS, Docker, etc.)
 
 ## Key Rules
 
