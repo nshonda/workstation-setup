@@ -99,14 +99,14 @@ if [[ "$PLATFORM" == "mac" ]]; then
     # Delete existing entries first
     security delete-generic-password -s "github-personal" -a "api-token" 2>/dev/null || true
     security delete-generic-password -s "github-work" -a "api-token" 2>/dev/null || true
-    security delete-generic-password -s "jira-work" -a "api-token" 2>/dev/null || true
-    security delete-generic-password -s "redmine-personal" -a "api-key" 2>/dev/null || true
+    security delete-generic-password -s "jira-basis" -a "api-token" 2>/dev/null || true
+    security delete-generic-password -s "redmine-onerhino" -a "api-key" 2>/dev/null || true
 
     # Add new entries
     security add-generic-password -s "github-personal" -a "api-token" -w "$GH_PERSONAL_TOKEN"
     security add-generic-password -s "github-work" -a "api-token" -w "$GH_WORK_TOKEN"
-    security add-generic-password -s "jira-work" -a "api-token" -w "$JIRA_TOKEN"
-    security add-generic-password -s "redmine-personal" -a "api-key" -w "$REDMINE_KEY"
+    security add-generic-password -s "jira-basis" -a "api-token" -w "$JIRA_TOKEN"
+    security add-generic-password -s "redmine-onerhino" -a "api-key" -w "$REDMINE_KEY"
     echo "Credentials stored in macOS Keychain"
 else
     if ! command -v secret-tool &>/dev/null; then
@@ -121,8 +121,8 @@ else
 
     echo -n "$GH_PERSONAL_TOKEN" | secret-tool store --label="GitHub Personal Token" service github-personal username api-token
     echo -n "$GH_WORK_TOKEN" | secret-tool store --label="GitHub Work Token" service github-work username api-token
-    echo -n "$JIRA_TOKEN" | secret-tool store --label="Jira Work API Token" service jira-work username api-token
-    echo -n "$REDMINE_KEY" | secret-tool store --label="Redmine Personal API Key" service redmine-personal username api-key
+    echo -n "$JIRA_TOKEN" | secret-tool store --label="Jira Work API Token" service jira-basis username api-token
+    echo -n "$REDMINE_KEY" | secret-tool store --label="Redmine Personal API Key" service redmine-onerhino username api-key
     echo "Credentials stored in gnome-keyring"
 fi
 
@@ -133,16 +133,16 @@ echo "--- Creating MCP wrapper scripts ---"
 
 mkdir -p ~/.local/bin
 
-cat > ~/.local/bin/mcp-jira-wrapper << EOF
+cat > ~/.local/bin/mcp-jira-basis-wrapper << EOF
 #!/bin/bash
 # Wrapper script for mcp-atlassian that fetches credentials from keychain
 export JIRA_URL="https://${JIRA_URL}"
 export JIRA_USERNAME="${JIRA_EMAIL}"
 
 if [[ "\$OSTYPE" == "darwin"* ]]; then
-  export JIRA_API_TOKEN=\$(security find-generic-password -s "jira-work" -a "api-token" -w 2>/dev/null)
+  export JIRA_API_TOKEN=\$(security find-generic-password -s "jira-basis" -a "api-token" -w 2>/dev/null)
 else
-  export JIRA_API_TOKEN=\$(secret-tool lookup service jira-work username api-token 2>/dev/null)
+  export JIRA_API_TOKEN=\$(secret-tool lookup service jira-basis username api-token 2>/dev/null)
 fi
 
 # Confluence uses same Atlassian credentials
@@ -158,16 +158,16 @@ fi
 exec uvx mcp-atlassian "\$@"
 EOF
 
-cat > ~/.local/bin/mcp-redmine-wrapper << EOF
+cat > ~/.local/bin/mcp-redmine-onerhino-wrapper << EOF
 #!/bin/bash
 # Wrapper script for mcp-redmine that fetches credentials from keychain
 export REDMINE_URL="https://${REDMINE_URL}"
 export REDMINE_ALLOWED_DIRECTORIES="\$HOME/workstation"
 
 if [[ "\$OSTYPE" == "darwin"* ]]; then
-  export REDMINE_API_KEY=\$(security find-generic-password -s "redmine-personal" -a "api-key" -w 2>/dev/null)
+  export REDMINE_API_KEY=\$(security find-generic-password -s "redmine-onerhino" -a "api-key" -w 2>/dev/null)
 else
-  export REDMINE_API_KEY=\$(secret-tool lookup service redmine-personal username api-key 2>/dev/null)
+  export REDMINE_API_KEY=\$(secret-tool lookup service redmine-onerhino username api-key 2>/dev/null)
 fi
 
 if [ -z "\$REDMINE_API_KEY" ]; then
@@ -178,9 +178,9 @@ fi
 exec uvx --from mcp-redmine mcp-redmine "\$@"
 EOF
 
-chmod +x ~/.local/bin/mcp-jira-wrapper ~/.local/bin/mcp-redmine-wrapper
-echo "Created ~/.local/bin/mcp-jira-wrapper"
-echo "Created ~/.local/bin/mcp-redmine-wrapper"
+chmod +x ~/.local/bin/mcp-jira-basis-wrapper ~/.local/bin/mcp-redmine-onerhino-wrapper
+echo "Created ~/.local/bin/mcp-jira-basis-wrapper"
+echo "Created ~/.local/bin/mcp-redmine-onerhino-wrapper"
 
 # ---------- 5. Deploy Claude Code config ----------
 
@@ -265,14 +265,14 @@ CLAUDE_CONFIG=~/.claude.json
 
 # Build MCP servers config
 MCP_SERVERS='{
-  "jira-work": {
+  "jira-basis": {
     "type": "stdio",
-    "command": "'"$HOME"'/.local/bin/mcp-jira-wrapper",
+    "command": "'"$HOME"'/.local/bin/mcp-jira-basis-wrapper",
     "args": []
   },
-  "redmine-personal": {
+  "redmine-onerhino": {
     "type": "stdio",
-    "command": "'"$HOME"'/.local/bin/mcp-redmine-wrapper",
+    "command": "'"$HOME"'/.local/bin/mcp-redmine-onerhino-wrapper",
     "args": []
   },
   "slack-onerhino": {
@@ -363,10 +363,10 @@ cat > ~/workstation/work/.envrc << EOF
 
 if [[ "\$OSTYPE" == "darwin"* ]]; then
   export GITHUB_TOKEN=\$(security find-generic-password -s "github-work" -a "api-token" -w 2>/dev/null)
-  export JIRA_API_TOKEN=\$(security find-generic-password -s "jira-work" -a "api-token" -w 2>/dev/null)
+  export JIRA_API_TOKEN=\$(security find-generic-password -s "jira-basis" -a "api-token" -w 2>/dev/null)
 else
   export GITHUB_TOKEN=\$(secret-tool lookup service github-work username api-token 2>/dev/null)
-  export JIRA_API_TOKEN=\$(secret-tool lookup service jira-work username api-token 2>/dev/null)
+  export JIRA_API_TOKEN=\$(secret-tool lookup service jira-basis username api-token 2>/dev/null)
 fi
 
 export JIRA_URL="https://${JIRA_URL}"
@@ -386,10 +386,10 @@ cat > ~/workstation/personal/.envrc << EOF
 
 if [[ "\$OSTYPE" == "darwin"* ]]; then
   export GITHUB_TOKEN=\$(security find-generic-password -s "github-personal" -a "api-token" -w 2>/dev/null)
-  export REDMINE_API_KEY=\$(security find-generic-password -s "redmine-personal" -a "api-key" -w 2>/dev/null)
+  export REDMINE_API_KEY=\$(security find-generic-password -s "redmine-onerhino" -a "api-key" -w 2>/dev/null)
 else
   export GITHUB_TOKEN=\$(secret-tool lookup service github-personal username api-token 2>/dev/null)
-  export REDMINE_API_KEY=\$(secret-tool lookup service redmine-personal username api-key 2>/dev/null)
+  export REDMINE_API_KEY=\$(secret-tool lookup service redmine-onerhino username api-key 2>/dev/null)
 fi
 
 export REDMINE_URL="https://${REDMINE_URL}"
@@ -501,8 +501,8 @@ echo "  - direnv .envrc files for work/personal directories"
 echo "  - direnv hook in $SHELL_RC"
 echo ""
 echo "MCP servers:"
-echo "  - jira-work: Jira + Confluence (Atlassian)"
-echo "  - redmine-personal: Redmine issue tracking"
+echo "  - jira-basis: Jira + Confluence (Atlassian)"
+echo "  - redmine-onerhino: Redmine issue tracking"
 echo "  - slack-onerhino: Slack (oneRhino workspace, OAuth)"
 echo "  - slack-basis: Slack (Basis workspace, OAuth)"
 echo "  - openbrowser: Browser automation (via plugin)"

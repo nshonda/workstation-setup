@@ -16,8 +16,8 @@
   "permissions": {
     "allow": [
       "mcp__context7__*",
-      "mcp__jira-work__*",
-      "mcp__redmine-personal__*",
+      "mcp__jira-basis__*",
+      "mcp__redmine-onerhino__*",
       "mcp__plugin_github_github__*",
       "mcp__plugin_openbrowser_openbrowser__*",
       "mcp__supabase__*",
