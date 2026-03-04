@@ -274,6 +274,22 @@ MCP_SERVERS='{
     "type": "stdio",
     "command": "'"$HOME"'/.local/bin/mcp-redmine-wrapper",
     "args": []
+  },
+  "slack-onerhino": {
+    "type": "http",
+    "url": "https://mcp.slack.com/mcp",
+    "oauth": {
+      "clientId": "1601185624273.8899143856786",
+      "callbackPort": 3118
+    }
+  },
+  "slack-basis": {
+    "type": "http",
+    "url": "https://mcp.slack.com/mcp",
+    "oauth": {
+      "clientId": "1601185624273.8899143856786",
+      "callbackPort": 3119
+    }
   }
 }'
 
@@ -487,6 +503,8 @@ echo ""
 echo "MCP servers:"
 echo "  - jira-work: Jira + Confluence (Atlassian)"
 echo "  - redmine-personal: Redmine issue tracking"
+echo "  - slack-onerhino: Slack (oneRhino workspace, OAuth)"
+echo "  - slack-basis: Slack (Basis workspace, OAuth)"
 echo "  - openbrowser: Browser automation (via plugin)"
 if [[ -n "$CONTEXT7_KEY" ]]; then
 echo "  - context7: Library documentation lookup"
@@ -496,3 +514,5 @@ echo "Next steps:"
 echo "  1. Restart your terminal (or run: source $SHELL_RC)"
 echo "  2. Restart Claude Code to load the new MCP servers"
 echo "  3. In Claude Code, run /mcp to verify the servers are connected"
+echo "  4. Use a Slack tool to trigger OAuth login for each Slack workspace"
+echo "     (you'll be prompted to authenticate separately for slack-onerhino and slack-basis)"
