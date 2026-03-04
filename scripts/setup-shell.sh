@@ -192,6 +192,20 @@ ensure_block "$ZSHRC" "# >>> local-bin path >>>" \
 'export PATH="$HOME/.local/bin:$PATH"
 # <<< local-bin path <<<'
 
+# gnome-keyring auto-unlock (WSL only — keyring locks on each session)
+if [[ "$PLATFORM" == "linux" ]]; then
+    ensure_block "$ZSHRC" "# >>> gnome-keyring auto-unlock (WSL) >>>" \
+'if [ -z "$GNOME_KEYRING_CONTROL" ] || [ ! -S "$GNOME_KEYRING_CONTROL/control" ]; then
+  eval "$(echo "" | gnome-keyring-daemon --unlock 2>/dev/null)" 2>/dev/null
+fi
+# <<< gnome-keyring auto-unlock (WSL) <<<'
+fi
+
+# direnv hook
+ensure_block "$ZSHRC" '# >>> direnv >>>' \
+'eval "$(direnv hook zsh)"
+# <<< direnv <<<'
+
 # ---------- 8. Summary ----------
 
 echo ""
