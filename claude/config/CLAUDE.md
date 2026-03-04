@@ -76,6 +76,11 @@ Invoke skills by context — do not wait for slash commands. Match the user's in
 - Accessibility audit, WCAG, a11y → `accessibility`
 - SEO audit, search optimization → `seo`
 - Security headers, modern APIs, best practices → `best-practices`
+- REST API design, endpoints, versioning, pagination, error responses → `api-design`
+- Database migrations, schema changes, zero-downtime deploys → `database-migrations`
+- Dependency vulnerability scanning, npm audit, supply chain security → `dependency-vulnerability-scanner`
+- Docker, CI/CD, Terraform, K8s, infrastructure as code → `devops-infra`
+- SOLID principles, design patterns, clean architecture, refactoring → `clean-code-architecture`
 
 **Research:**
 - User says "research", "investigate", "deep dive", or asks to thoroughly explore a topic, codebase question, architecture decision, or implementation approach → `research`
