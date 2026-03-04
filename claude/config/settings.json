@@ -15,6 +15,12 @@
   },
   "permissions": {
     "allow": [
+      "Read",
+      "Glob",
+      "Grep",
+      "WebFetch",
+      "WebSearch",
+      "ToolSearch",
       "mcp__context7__*",
       "mcp__jira-basis__*",
       "mcp__redmine-onerhino__*",
