@@ -48,6 +48,7 @@ All scripts are idempotent. Re-run `./setup.sh` or any individual script to upda
 |--------|---------|
 | [mcp-atlassian](https://github.com/sooperset/mcp-atlassian) | Jira + Confluence integration |
 | [mcp-redmine](https://github.com/runekaagaard/mcp-redmine) | Redmine issue tracking |
+| [Slack MCP](https://mcp.slack.com/) | Slack (two workspaces: `slack-onerhino` personal, `slack-basis` work, OAuth) |
 | [Context7](https://context7.com/) | Library/framework documentation lookup |
 
 ### Claude Code Plugins
@@ -100,6 +101,49 @@ Skills are deployed to `~/.claude/skills/` — see [`claude/skills/`](claude/ski
 | accessibility | WCAG 2.1 compliance audit | [WCAG 2.1](https://www.w3.org/TR/WCAG21/) |
 | seo | Search engine optimization | [web.dev SEO](https://web.dev/learn/seo/) |
 | best-practices | Security headers, modern APIs | [web.dev](https://web.dev/) |
+| docs | Documentation generation (changelogs, READMEs, ADRs, release notes) | Custom |
+| api-design | REST API design patterns (resources, status codes, pagination, errors) | Custom |
+| clean-code-architecture | SOLID, design patterns, clean architecture, refactoring | Custom |
+| database-migrations | Schema changes, data migrations, rollbacks, zero-downtime deploys | Custom |
+| dependency-vulnerability-scanner | Dependency scanning for known vulnerabilities | Custom |
+| devops-infra | Docker, CI/CD, Terraform, K8s, monitoring, deployment strategies | Custom |
+| subagent-catalog | Browse and install agents from the VoltAgent catalog | Custom |
+
+### Specialist Agents
+
+Subagent definitions in `claude/agents/`, spawned via the Task tool for targeted work:
+
+| Agent | Model | Purpose |
+|-------|-------|---------|
+| architect-reviewer | opus | Architecture review, DDD, CQRS, tech debt assessment |
+| mcp-developer | sonnet | Build and debug MCP servers and clients |
+| prompt-engineer | sonnet | Prompt design, optimization, A/B testing for LLMs |
+| dx-optimizer | sonnet | Developer experience (build times, HMR, test speed) |
+| knowledge-synthesizer | sonnet | Extract patterns and learnings from completed workflows |
+
+### Hooks
+
+Hook scripts in `claude/hooks/`, wired via `settings.json`:
+
+| Hook | Event | Purpose |
+|------|-------|---------|
+| `strip-co-authored-by.sh` | PreToolUse:Bash | Strip `Co-Authored-By: Claude` and self-attribution from git/gh commands |
+| `strip-attribution-mcp.sh` | PreToolUse:mcp | Strip self-attribution from MCP tool calls (PR descriptions, comments) |
+| `rtk-rewrite.sh` | PreToolUse:Bash | Rewrite CLI commands through RTK proxy for token savings |
+| `replay-learnings.js` | SessionStart | Surface relevant past learnings at conversation start |
+
+### Hookify Rules
+
+Hookify rule files in `claude/config/`, deployed to `~/.claude/`:
+
+| Rule | Purpose |
+|------|---------|
+| `hookify.block-co-authored-by.local.md` | Block Co-Authored-By lines in commits |
+| `hookify.block-self-promotion.local.md` | Block promotional self-attribution text |
+| `hookify.block-self-attribution-files.local.md` | Block self-attribution in file writes |
+| `hookify.block-docs-plans.local.md` | Block creation of `docs/plans/` (use `_research/` instead) |
+| `hookify.block-hardcoded-credentials.local.md` | Block hardcoded credentials in code |
+| `hookify.warn-research-gitignore.local.md` | Warn if `_research/` is not gitignored |
 
 ### Additional Docs
 

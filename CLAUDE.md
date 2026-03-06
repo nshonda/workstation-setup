@@ -47,9 +47,14 @@ claude/
     RTK.md                  # RTK reference -> ~/.claude/RTK.md
     settings.json           # Permissions, hooks, plugins -> ~/.claude/settings.json
     settings.local.json     # Per-machine overrides -> ~/.claude/settings.local.json
+    hookify.*.local.md      # Hookify rule files -> ~/.claude/
   skills/                   # All skills -> ~/.claude/skills/
   agents/                   # Subagent definitions -> ~/.claude/agents/
-  hooks/                    # Hook scripts -> ~/.claude/hooks/
+  hooks/
+    strip-co-authored-by.sh # Strip Co-Authored-By from git commands
+    strip-attribution-mcp.sh # Strip self-attribution from MCP tool calls
+    rtk-rewrite.sh          # Rewrite CLI commands through RTK proxy
+    replay-learnings.js     # Surface past learnings on session start
 docs/
   ssh-github-multi-account.md
   wsl-setup.md

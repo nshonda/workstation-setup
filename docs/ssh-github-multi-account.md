@@ -11,18 +11,48 @@
 
 ### `~/.ssh/config`
 
-```
-Host github.com
-    IdentityFile ~/.ssh/id_rsa_mac
+The main config defines hosts with `IdentitiesOnly` but delegates key paths to `config.local`:
 
+```
+# Personal GitHub Account
+Host github.com
+    HostName github.com
+    User git
+    IdentitiesOnly yes
+
+# Work GitHub Account
 Host github.com-<WORK_GH_USERNAME>
     HostName github.com
-    IdentityFile ~/.ssh/id_rsa_work_mac
+    User git
+    IdentitiesOnly yes
+
+# Common SSH settings
+Host *
+    ServerAliveInterval 60
+    ServerAliveCountMax 3
+    AddKeysToAgent yes
+
+# Include machine-specific key mappings
+Include ~/.ssh/config.local
 ```
 
 ### `~/.ssh/config.local`
 
-Machine-specific overrides. On macOS, this adds `UseKeychain yes`.
+Machine-specific key paths and overrides. Created once by `setup-ssh.sh`, not overwritten on re-runs. On macOS, this adds `UseKeychain yes`:
+
+```
+# Personal GitHub - Mac key
+Host github.com
+    IdentityFile ~/.ssh/id_rsa_mac
+    UseKeychain yes
+
+# Work GitHub - Mac key
+Host github.com-<WORK_GH_USERNAME>
+    IdentityFile ~/.ssh/id_rsa_work_mac
+    UseKeychain yes
+```
+
+On Linux/WSL, the same without `UseKeychain`.
 
 ## Cloning with the Right Identity
 
