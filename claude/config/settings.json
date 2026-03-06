@@ -114,7 +114,16 @@
         ]
       },
       {
-        "matcher": "mcp__slack-*__slack_send_message",
+        "matcher": "mcp__slack-basis__slack_send_message",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/slack-schedule-rewrite.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "mcp__slack-onerhino__slack_send_message",
         "hooks": [
           {
             "type": "command",
