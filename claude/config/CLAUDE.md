@@ -32,7 +32,7 @@ Invoke skills by context — do not wait for slash commands. Match the user's in
 **Before writing code:**
 - Building, creating, or adding new functionality → `superpowers:brainstorming` first, then implementation skill
 - Planning a multi-step task or writing a spec → `superpowers:writing-plans`
-- Starting feature work that needs branch isolation → `superpowers:using-git-worktrees`
+- Starting feature work → `superpowers:using-git-worktrees` (auto-decide per Git Worktree Policy)
 
 **During implementation:**
 - Implementing any feature or bugfix → `superpowers:test-driven-development`
@@ -146,6 +146,16 @@ Default to haiku when unsure — escalate only when the task clearly needs deepe
 
 - NEVER add `Co-Authored-By: Claude` (or any Claude co-author line) to commit messages.
 - NEVER add promotional text like "Generated with Claude Code", "Written by Claude", or any self-attribution to commit messages, PR descriptions, code comments, or any output.
+
+## Git Worktree Policy
+
+**Default: use a worktree for any task that modifies code files.** Invoke `superpowers:using-git-worktrees` automatically — do not ask.
+
+**Only skip worktrees** for:
+- Single-file config/doc/markdown edits
+- Typo fixes or comment-only changes
+
+This prevents collisions when multiple Claude Code sessions run in the same repo.
 
 ## Conventions
 

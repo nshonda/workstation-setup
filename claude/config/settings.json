@@ -82,7 +82,20 @@
         "hooks": [
           {
             "type": "command",
+            "command": "$HOME/.claude/hooks/strip-co-authored-by.sh"
+          },
+          {
+            "type": "command",
             "command": "$HOME/.claude/hooks/rtk-rewrite.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "mcp__plugin_github_github__*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/strip-attribution-mcp.sh"
           }
         ]
       }
