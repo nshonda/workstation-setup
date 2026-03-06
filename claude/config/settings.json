@@ -30,9 +30,11 @@
       "mcp__slack-basis__slack_read_*",
       "mcp__slack-basis__slack_search_*",
       "mcp__slack-basis__slack_send_message_draft",
+      "mcp__slack-basis__slack_schedule_message",
       "mcp__slack-onerhino__slack_read_*",
       "mcp__slack-onerhino__slack_search_*",
       "mcp__slack-onerhino__slack_send_message_draft",
+      "mcp__slack-onerhino__slack_schedule_message",
       "mcp__gdocs-projects__*",
       "Bash(git status:*)",
       "Bash(git log:*)",
@@ -96,6 +98,15 @@
           {
             "type": "command",
             "command": "$HOME/.claude/hooks/strip-attribution-mcp.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "mcp__slack-*__slack_send_message",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/slack-schedule-rewrite.sh"
           }
         ]
       }
