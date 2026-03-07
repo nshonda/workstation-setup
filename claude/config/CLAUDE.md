@@ -27,106 +27,37 @@ If an MCP server or plugin can do the job, use it. Only fall back to CLI tools o
 
 ## Skill Routing
 
-Invoke skills by context — do not wait for slash commands. Match the user's intent to the right skill:
+Invoke skills by context. Most skills self-describe their triggers — only non-obvious routing is listed here.
 
-**Before writing code:**
-- Building, creating, or adding new functionality → `superpowers:brainstorming` first, then implementation skill
-- Planning a multi-step task or writing a spec → `superpowers:writing-plans`
+**Workflow sequencing:**
+- Building new functionality → `superpowers:brainstorming` first, then implementation skill
 - Starting feature work → `superpowers:using-git-worktrees` (auto-decide per Git Worktree Policy)
-
-**During implementation:**
 - Implementing any feature or bugfix → `superpowers:test-driven-development`
-- Guided feature development with architecture focus → `feature-dev:feature-dev`
-- Building frontend/UI components or pages → `frontend-design:frontend-design`
-- Building apps with Claude API / Anthropic SDK → `claude-developer-platform`
-- Building MCP servers (Python/TypeScript) → `mcp-builder`
-- Creating or improving skills with evals/benchmarks → `skill-creator`
-- Testing web apps with Playwright → `webapp-testing`
-- Executing a written plan with independent tasks → `superpowers:subagent-driven-development`
-- Executing a plan from a separate session → `superpowers:executing-plans`
-- 2+ independent tasks that can run in parallel → `superpowers:dispatching-parallel-agents`
+- About to claim work is done → `superpowers:verification-before-completion`
 
-**Debugging:**
-- Any bug, test failure, or unexpected behavior → `superpowers:systematic-debugging`
+**Disambiguation:**
+- PR review → `code-review:code-review` (quick, posts comment) or `pr-review-toolkit:review-pr` (thorough multi-aspect)
+- Commit → `pro-workflow:commit` (quality checks) or `commit-commands:commit` (quick)
+- Commit + push + PR → `commit-commands:commit-push-pr`
 
-**Documentation:**
-- Writing docs, changelogs, READMEs, ADRs, release notes, or documenting changes → `docs`
-
-**Finishing work:**
-- About to claim work is done/fixed/passing → `superpowers:verification-before-completion`
-- Want code reviewed before merging → `superpowers:requesting-code-review`
-- Reviewing a PR → `pr-review-toolkit:review-pr` or `code-review:code-review`
-- Received code review feedback → `superpowers:receiving-code-review`
-- Ready to commit → `pro-workflow:commit`
-- Quick commit, skip quality checks → `commit-commands:commit`
-- Ready to commit + push + open PR → `commit-commands:commit-push-pr`
-- Implementation complete, deciding how to integrate → `superpowers:finishing-a-development-branch`
-- Clean up local branches deleted on remote → `commit-commands:clean_gone`
-
-**Framework & stack detection (auto-invoke when working in matching project):**
-- SilverStripe project detected → `ss-dev`
-- WordPress project detected → `wp-dev`
-- Nuxt project detected → `nuxt-dev`
-- Next.js / React project detected → `next-best-practices` + `vercel-react-best-practices`
-- Supabase / Postgres work → `supabase-postgres-best-practices`
-- UI review, accessibility audit, design check → `web-design-guidelines`
-- Web quality audit, Lighthouse audit → `web-quality-audit`
-- Web performance optimization, page speed → `performance`
-- Core Web Vitals (LCP, INP, CLS) → `core-web-vitals`
-- Accessibility audit, WCAG, a11y → `accessibility`
-- SEO audit, search optimization → `seo`
-- Security headers, modern APIs, best practices → `best-practices`
-- REST API design, endpoints, versioning, pagination, error responses → `api-design`
-- Database migrations, schema changes, zero-downtime deploys → `database-migrations`
-- Dependency vulnerability scanning, npm audit, supply chain security → `dependency-vulnerability-scanner`
-- Docker, CI/CD, Terraform, K8s, infrastructure as code → `devops-infra`
-- SOLID principles, design patterns, clean architecture, refactoring → `clean-code-architecture`
-
-**Research:**
-- User says "research", "investigate", "deep dive", or asks to thoroughly explore a topic, codebase question, architecture decision, or implementation approach → `research`
-
-**Hookify (hook management):**
-- Create hooks from conversation analysis or explicit instructions → `hookify:hookify`
-- Write or edit hookify rule files → `hookify:writing-rules`
-- List configured hookify rules → `hookify:list`
-- Enable/disable hookify rules interactively → `hookify:configure`
-- Get help with hookify → `hookify:help`
+**Non-obvious routing:**
+- Executing a plan with independent tasks → `superpowers:subagent-driven-development`
+- Executing a plan from separate session → `superpowers:executing-plans`
+- 2+ independent parallel tasks → `superpowers:dispatching-parallel-agents`
+- Bug/test failure/unexpected behavior → `superpowers:systematic-debugging`
+- Code review before merging → `superpowers:requesting-code-review`
+- Received review feedback → `superpowers:receiving-code-review`
+- Implementation complete, deciding integration → `superpowers:finishing-a-development-branch`
+- Clean up gone branches → `commit-commands:clean_gone`
+- Multi-line commands for manual execution → `clipboard` (auto-trigger)
+- Visual architecture plan → `interactive-plan`
+- Creating/editing skills → `superpowers:writing-skills`
 
 **Specialist agents (spawned as subagents via Task tool into ~/.claude/agents/):**
 - Architecture review, DDD, CQRS, tech debt assessment → `architect-reviewer` (opus)
 - Building/debugging MCP servers and clients → `mcp-developer` (sonnet)
-- Prompt design, optimization, A/B testing for LLMs → `prompt-engineer` (sonnet)
-- Developer experience optimization (build times, HMR, test speed) → `dx-optimizer` (sonnet)
-- Extracting patterns and learnings from completed workflows → `knowledge-synthesizer` (sonnet)
-- Browse/install agents from VoltAgent catalog → `/subagent-catalog:search`, `/subagent-catalog:fetch`
 
-**Document manipulation:**
-- PDF operations (merge, split, OCR, watermark, form fill) → `pdf`
-- Word document creation/editing → `docx`
-- Excel spreadsheet creation/editing → `xlsx`
-- PowerPoint creation/editing → `pptx`
-
-**Clipboard:**
-- Suggesting multi-line or multiple commands for user to run manually → `clipboard` (auto-trigger)
-- User says `/clip` or "copy that to clipboard" → `clipboard`
-
-**Utilities:**
-- Generate visual architecture plan → `interactive-plan`
-- Creating or editing skills → `superpowers:writing-skills`
-- Audit/improve CLAUDE.md files → `claude-md-management:claude-md-improver`
-- Update CLAUDE.md with session learnings → `claude-md-management:revise-claude-md`
-- Customize keyboard shortcuts → `keybindings-help`
-- Recommend Claude Code automations → `claude-code-setup:claude-automation-recommender`
-- Session wrap-up → `pro-workflow:wrap-up`
-- Battle-tested Claude Code workflows → `pro-workflow:pro-workflow`
-- Save a learning → `pro-workflow:learn`
-- Search past learnings → `pro-workflow:search`
-- List all learnings → `pro-workflow:list`
-- Surface past learnings for current task → `pro-workflow:replay`
-- Session & learning analytics → `pro-workflow:insights`
-- Extract correction to memory → `pro-workflow:learn-rule`
-- Worktree setup guide → `pro-workflow:parallel`
-- Session handoff document → `pro-workflow:handoff`
+**Framework skills:** Enabled per-project via `init-project-claude`. Not globally routed.
 
 ## Subagent Rules
 
@@ -160,6 +91,14 @@ Default to haiku when unsure — escalate only when the task clearly needs deepe
 - Typo fixes or comment-only changes
 
 This prevents collisions when multiple Claude Code sessions run in the same repo.
+
+## Anti-Hallucination Guards
+
+- Before updating or transitioning a Jira issue, always `jira_get_issue` first to confirm it exists and verify current status.
+- Before updating a Redmine issue, always GET it first via `redmine_request`.
+- Never fabricate issue keys, sprint IDs, or board IDs — always retrieve them from the API.
+- Prefer `jira_search` with targeted JQL over `jira_get_project_issues` (token efficiency).
+- Prefer `jira_get_sprint_issues` over `jira_get_board_issues` when you know the sprint.
 
 ## Conventions
 
