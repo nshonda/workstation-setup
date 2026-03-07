@@ -27,37 +27,23 @@ If an MCP server or plugin can do the job, use it. Only fall back to CLI tools o
 
 ## Skill Routing
 
-Invoke skills by context. Most skills self-describe their triggers — only non-obvious routing is listed here.
+Most skills self-describe their triggers. Only disambiguation and non-obvious routing listed here.
 
-**Workflow sequencing:**
-- Building new functionality → `superpowers:brainstorming` first, then implementation skill
-- Starting feature work → `superpowers:using-git-worktrees` (auto-decide per Git Worktree Policy)
-- Implementing any feature or bugfix → `superpowers:test-driven-development`
-- About to claim work is done → `superpowers:verification-before-completion`
+**Workflow sequence:** brainstorming → worktree → TDD → implementation → verification-before-completion
 
 **Disambiguation:**
-- PR review → `code-review:code-review` (quick, posts comment) or `pr-review-toolkit:review-pr` (thorough multi-aspect)
-- Commit → `pro-workflow:commit` (quality checks) or `commit-commands:commit` (quick)
-- Commit + push + PR → `commit-commands:commit-push-pr`
+- PR review → `code-review:code-review` (quick) or `pr-review-toolkit:review-pr` (thorough)
+- Commit → `commit-commands:commit` | Commit + push + PR → `commit-commands:commit-push-pr`
 
 **Non-obvious routing:**
-- Executing a plan with independent tasks → `superpowers:subagent-driven-development`
-- Executing a plan from separate session → `superpowers:executing-plans`
-- 2+ independent parallel tasks → `superpowers:dispatching-parallel-agents`
-- Bug/test failure/unexpected behavior → `superpowers:systematic-debugging`
-- Code review before merging → `superpowers:requesting-code-review`
-- Received review feedback → `superpowers:receiving-code-review`
-- Implementation complete, deciding integration → `superpowers:finishing-a-development-branch`
-- Clean up gone branches → `commit-commands:clean_gone`
-- Multi-line commands for manual execution → `clipboard` (auto-trigger)
-- Visual architecture plan → `interactive-plan`
+- Plan with independent tasks → `superpowers:subagent-driven-development`
+- Plan from separate session → `superpowers:executing-plans`
+- Bug/test failure → `superpowers:systematic-debugging`
 - Creating/editing skills → `superpowers:writing-skills`
 
-**Specialist agents (spawned as subagents via Task tool into ~/.claude/agents/):**
-- Architecture review, DDD, CQRS, tech debt assessment → `architect-reviewer` (opus)
-- Building/debugging MCP servers and clients → `mcp-developer` (sonnet)
-
-**Framework skills:** Enabled per-project via `init-project-claude`. Not globally routed.
+**Specialist agents (~/.claude/agents/):**
+- Architecture/DDD/tech debt → `architect-reviewer` (opus)
+- MCP servers/clients → `mcp-developer` (sonnet)
 
 ## Subagent Rules
 
@@ -107,16 +93,7 @@ This prevents collisions when multiple Claude Code sessions run in the same repo
 
 ## Jira Branch Names
 
-When creating a branch for a Jira ticket, use this format:
-```
-{ISSUE_KEY}-{summary-in-kebab-case}
-```
-
-To generate from Jira MCP issue data:
-1. Get issue with `jira_get_issue`
-2. Take the `key` (e.g., `PROJ-123`)
-3. Take the `summary`, lowercase it, replace spaces with hyphens
-4. Combine: `PROJ-123-fix-the-broken-thing`
+Format: `{ISSUE_KEY}-{summary-in-kebab-case}` (e.g., `PROJ-123-fix-the-broken-thing`). Derive key and summary from `jira_get_issue`.
 
 ## Research Folder
 

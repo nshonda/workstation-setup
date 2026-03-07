@@ -68,9 +68,6 @@
       "Bash(uname:*)",
       "Bash(hostname:*)",
       "Bash(date:*)",
-      "Bash(cat:*)",
-      "Bash(head:*)",
-      "Bash(tail:*)",
       "Bash(wc:*)",
       "Bash(file:*)",
       "Bash(tree:*)",
@@ -159,6 +156,15 @@
         ]
       },
       {
+        "matcher": "mcp__jira-basis__jira_add_worklog",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/validate-mcp-inputs.sh"
+          }
+        ]
+      },
+      {
         "matcher": "mcp__redmine-onerhino__redmine_request",
         "hooks": [
           {
@@ -174,14 +180,13 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node $HOME/.claude/hooks/replay-learnings.js"
+            "command": "node $HOME/.claude/hooks/cross-project-memory.js"
           }
         ]
       }
     ]
   },
   "enabledPlugins": {
-    "pro-workflow@pro-workflow": true,
     "code-review@claude-plugins-official": true,
     "github@claude-plugins-official": true,
     "feature-dev@claude-plugins-official": true,
@@ -196,6 +201,7 @@
     "claude-code-setup@claude-plugins-official": true,
     "php-lsp@claude-plugins-official": true,
     "frontend-design@claude-plugins-official": true,
-    "hookify@claude-plugins-official": true
+    "hookify@claude-plugins-official": true,
+    "code-simplifier@claude-plugins-official": true
   }
 }

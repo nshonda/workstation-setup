@@ -51,34 +51,43 @@ echo ""
 
 echo "GitHub Personal Token (${WS_PERSONAL_GH_USER})"
 echo "  Create at: https://github.com/settings/tokens"
-read -sp "  Token: " GH_PERSONAL_TOKEN
+read -sp "  Token (Enter to skip): " GH_PERSONAL_TOKEN
 echo ""
 
 echo "GitHub Work Token (${WS_WORK_GH_USER})"
 echo "  Create at: https://github.com/settings/tokens (work account)"
-read -sp "  Token: " GH_WORK_TOKEN
+read -sp "  Token (Enter to skip): " GH_WORK_TOKEN
 echo ""
 
 echo ""
 echo "--- Jira Configuration ---"
-read -p "Jira URL (e.g., company.atlassian.net): " JIRA_URL
-JIRA_URL="${JIRA_URL#https://}"
-JIRA_URL="${JIRA_URL#http://}"
-JIRA_URL="${JIRA_URL%/}"
-read -p "Jira email: " JIRA_EMAIL
-echo "  Get your API token from: https://id.atlassian.com/manage-profile/security/api-tokens"
-read -sp "Jira API token: " JIRA_TOKEN
-echo ""
+read -p "Jira URL (e.g., company.atlassian.net, Enter to skip): " JIRA_URL
+if [[ -n "$JIRA_URL" ]]; then
+    JIRA_URL="${JIRA_URL#https://}"
+    JIRA_URL="${JIRA_URL#http://}"
+    JIRA_URL="${JIRA_URL%/}"
+    read -p "Jira email: " JIRA_EMAIL
+    echo "  Get your API token from: https://id.atlassian.com/manage-profile/security/api-tokens"
+    read -sp "Jira API token: " JIRA_TOKEN
+    echo ""
+else
+    JIRA_EMAIL=""
+    JIRA_TOKEN=""
+fi
 
 echo ""
 echo "--- Redmine Configuration ---"
-read -p "Redmine URL (e.g., redmine.example.com): " REDMINE_URL
-REDMINE_URL="${REDMINE_URL#https://}"
-REDMINE_URL="${REDMINE_URL#http://}"
-REDMINE_URL="${REDMINE_URL%/}"
-echo "  Get your API key from: Redmine > My Account > API access key"
-read -sp "Redmine API key: " REDMINE_KEY
-echo ""
+read -p "Redmine URL (e.g., redmine.example.com, Enter to skip): " REDMINE_URL
+if [[ -n "$REDMINE_URL" ]]; then
+    REDMINE_URL="${REDMINE_URL#https://}"
+    REDMINE_URL="${REDMINE_URL#http://}"
+    REDMINE_URL="${REDMINE_URL%/}"
+    echo "  Get your API key from: Redmine > My Account > API access key"
+    read -sp "Redmine API key: " REDMINE_KEY
+    echo ""
+else
+    REDMINE_KEY=""
+fi
 
 echo ""
 echo "--- Context7 Configuration ---"
@@ -95,36 +104,34 @@ read -p "GCS bucket for interactive plans (or press Enter to skip): " GCS_BUCKET
 echo ""
 echo "--- Storing credentials ---"
 
-if [[ "$PLATFORM" == "mac" ]]; then
-    # Delete existing entries first
-    security delete-generic-password -s "github-personal" -a "api-token" 2>/dev/null || true
-    security delete-generic-password -s "github-work" -a "api-token" 2>/dev/null || true
-    security delete-generic-password -s "jira-basis" -a "api-token" 2>/dev/null || true
-    security delete-generic-password -s "redmine-onerhino" -a "api-key" 2>/dev/null || true
+store_credential() {
+    local service="$1" account="$2" label="$3" value="$4"
+    [[ -z "$value" ]] && return 0
+    if [[ "$PLATFORM" == "mac" ]]; then
+        security delete-generic-password -s "$service" -a "$account" 2>/dev/null || true
+        security add-generic-password -s "$service" -a "$account" -w "$value"
+    else
+        echo -n "$value" | secret-tool store --label="$label" service "$service" username "$account"
+    fi
+    echo "  Stored: $service"
+}
 
-    # Add new entries
-    security add-generic-password -s "github-personal" -a "api-token" -w "$GH_PERSONAL_TOKEN"
-    security add-generic-password -s "github-work" -a "api-token" -w "$GH_WORK_TOKEN"
-    security add-generic-password -s "jira-basis" -a "api-token" -w "$JIRA_TOKEN"
-    security add-generic-password -s "redmine-onerhino" -a "api-key" -w "$REDMINE_KEY"
-    echo "Credentials stored in macOS Keychain"
-else
+if [[ "$PLATFORM" == "linux" ]]; then
     if ! command -v secret-tool &>/dev/null; then
         echo "ERROR: secret-tool not found. Run setup-wsl.sh first to install keyring packages."
         exit 1
     fi
-    # Start gnome-keyring daemon for this session
     if [ -z "${DBUS_SESSION_BUS_ADDRESS:-}" ]; then
         eval "$(dbus-launch --sh-syntax)"
     fi
     eval "$(echo '' | gnome-keyring-daemon --unlock --components=secrets 2>/dev/null)" || true
-
-    echo -n "$GH_PERSONAL_TOKEN" | secret-tool store --label="GitHub Personal Token" service github-personal username api-token
-    echo -n "$GH_WORK_TOKEN" | secret-tool store --label="GitHub Work Token" service github-work username api-token
-    echo -n "$JIRA_TOKEN" | secret-tool store --label="Jira Work API Token" service jira-basis username api-token
-    echo -n "$REDMINE_KEY" | secret-tool store --label="Redmine Personal API Key" service redmine-onerhino username api-key
-    echo "Credentials stored in gnome-keyring"
 fi
+
+store_credential "github-personal" "api-token" "GitHub Personal Token" "$GH_PERSONAL_TOKEN"
+store_credential "github-work" "api-token" "GitHub Work Token" "$GH_WORK_TOKEN"
+store_credential "jira-basis" "api-token" "Jira Work API Token" "$JIRA_TOKEN"
+store_credential "redmine-onerhino" "api-key" "Redmine Personal API Key" "$REDMINE_KEY"
+echo "Credentials stored"
 
 # ---------- 4. Create MCP wrapper scripts ----------
 
@@ -133,6 +140,7 @@ echo "--- Creating MCP wrapper scripts ---"
 
 mkdir -p ~/.local/bin
 
+if [[ -n "$JIRA_URL" ]]; then
 cat > ~/.local/bin/mcp-jira-basis-wrapper << EOF
 #!/bin/bash
 # Wrapper script for mcp-atlassian that fetches credentials from keychain
@@ -157,7 +165,10 @@ fi
 
 exec uvx mcp-atlassian "\$@"
 EOF
+echo "Created ~/.local/bin/mcp-jira-basis-wrapper"
+fi
 
+if [[ -n "$REDMINE_URL" ]]; then
 cat > ~/.local/bin/mcp-redmine-onerhino-wrapper << EOF
 #!/bin/bash
 # Wrapper script for mcp-redmine that fetches credentials from keychain
@@ -177,10 +188,11 @@ fi
 
 exec uvx --from mcp-redmine mcp-redmine "\$@"
 EOF
-
-chmod +x ~/.local/bin/mcp-jira-basis-wrapper ~/.local/bin/mcp-redmine-onerhino-wrapper
-echo "Created ~/.local/bin/mcp-jira-basis-wrapper"
 echo "Created ~/.local/bin/mcp-redmine-onerhino-wrapper"
+fi
+
+# chmod wrappers that exist
+chmod +x ~/.local/bin/mcp-*-wrapper 2>/dev/null || true
 
 # ---------- 5. Deploy Claude Code config ----------
 
@@ -270,18 +282,8 @@ echo "--- Configuring MCP servers ---"
 
 CLAUDE_CONFIG=~/.claude.json
 
-# Build MCP servers config
+# Build MCP servers config — start with Slack (always included)
 MCP_SERVERS='{
-  "jira-basis": {
-    "type": "stdio",
-    "command": "'"$HOME"'/.local/bin/mcp-jira-basis-wrapper",
-    "args": []
-  },
-  "redmine-onerhino": {
-    "type": "stdio",
-    "command": "'"$HOME"'/.local/bin/mcp-redmine-onerhino-wrapper",
-    "args": []
-  },
   "slack-onerhino": {
     "type": "http",
     "url": "https://mcp.slack.com/mcp",
@@ -299,6 +301,28 @@ MCP_SERVERS='{
     }
   }
 }'
+
+# Add Jira if configured
+if [[ -n "$JIRA_URL" ]]; then
+    MCP_SERVERS=$(echo "$MCP_SERVERS" | jq '. + {
+      "jira-basis": {
+        "type": "stdio",
+        "command": "'"$HOME"'/.local/bin/mcp-jira-basis-wrapper",
+        "args": []
+      }
+    }')
+fi
+
+# Add Redmine if configured
+if [[ -n "$REDMINE_URL" ]]; then
+    MCP_SERVERS=$(echo "$MCP_SERVERS" | jq '. + {
+      "redmine-onerhino": {
+        "type": "stdio",
+        "command": "'"$HOME"'/.local/bin/mcp-redmine-onerhino-wrapper",
+        "args": []
+      }
+    }')
+fi
 
 # Add Context7 if API key was provided
 if [[ -n "$CONTEXT7_KEY" ]]; then
@@ -331,27 +355,13 @@ echo "--- Installing plugins ---"
 
 if command -v claude &>/dev/null; then
     claude plugins add anthropics/claude-plugins-official 2>/dev/null || true
-    claude plugins add rohitg00/pro-workflow 2>/dev/null || true
     claude plugins add anthropics/skills 2>/dev/null || true
     claude plugins install document-skills@anthropic-agent-skills 2>/dev/null || true
     claude plugins install example-skills@anthropic-agent-skills 2>/dev/null || true
     echo "Plugins installed"
-
-    # Build pro-workflow SQLite store (plugin ships uncompiled TypeScript)
-    PRO_WORKFLOW_CACHE=$(find ~/.claude/plugins/cache/pro-workflow -maxdepth 2 -name "package.json" -exec dirname {} \; 2>/dev/null | head -1)
-    if [[ -n "$PRO_WORKFLOW_CACHE" && ! -d "$PRO_WORKFLOW_CACHE/dist" ]]; then
-        echo "Building pro-workflow SQLite store..."
-        (cd "$PRO_WORKFLOW_CACHE" && npm install --ignore-scripts && npx tsc) 2>&1 | tail -3
-        if [[ -f "$PRO_WORKFLOW_CACHE/dist/db/store.js" ]]; then
-            echo "pro-workflow SQLite store built successfully"
-        else
-            echo "WARNING: pro-workflow build failed — /learn and /wrap-up won't persist to SQLite"
-        fi
-    fi
 else
     echo "Claude Code CLI not found — install it first, then run:"
     echo "  claude plugins add anthropics/claude-plugins-official"
-    echo "  claude plugins add rohitg00/pro-workflow"
     echo "  claude plugins add anthropics/skills"
     echo "  claude plugins install document-skills@anthropic-agent-skills"
     echo "  claude plugins install example-skills@anthropic-agent-skills"
@@ -376,15 +386,15 @@ else
   export JIRA_API_TOKEN=\$(secret-tool lookup service jira-basis username api-token 2>/dev/null)
 fi
 
+$(if [[ -n "$JIRA_URL" ]]; then
+cat << JIRA_INNER
 export JIRA_URL="https://${JIRA_URL}"
 export JIRA_USERNAME="${JIRA_EMAIL}"
+JIRA_INNER
+fi)
 
 # GitHub MCP plugin expects GITHUB_PERSONAL_ACCESS_TOKEN
 export GITHUB_PERSONAL_ACCESS_TOKEN="\$GITHUB_TOKEN"
-
-# Unset personal service vars
-unset REDMINE_URL
-unset REDMINE_API_KEY
 EOF
 
 cat > ~/workstation/personal/.envrc << EOF
@@ -399,15 +409,14 @@ else
   export REDMINE_API_KEY=\$(secret-tool lookup service redmine-onerhino username api-key 2>/dev/null)
 fi
 
+$(if [[ -n "$REDMINE_URL" ]]; then
+cat << REDMINE_INNER
 export REDMINE_URL="https://${REDMINE_URL}"
+REDMINE_INNER
+fi)
 
 # GitHub MCP plugin expects GITHUB_PERSONAL_ACCESS_TOKEN
 export GITHUB_PERSONAL_ACCESS_TOKEN="\$GITHUB_TOKEN"
-
-# Unset work service vars
-unset JIRA_URL
-unset JIRA_USERNAME
-unset JIRA_API_TOKEN
 EOF
 
 echo "Created ~/workstation/work/.envrc"
