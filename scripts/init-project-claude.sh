@@ -152,14 +152,16 @@ NEWFILE
     echo "  Created CLAUDE.md"
 else
     if grep -q "$BEGIN_MARKER" "$CLAUDE_MD"; then
-        # Replace existing auto-skills block
+        # Replace existing auto-skills block using sed + temp file
         TEMP=$(mktemp)
-        awk -v begin="$BEGIN_MARKER" -v end="$END_MARKER" -v block="$SKILLS_BLOCK" '
-            $0 == begin { print block; skip=1; next }
-            $0 == end { skip=0; next }
-            !skip { print }
-        ' "$CLAUDE_MD" > "$TEMP"
+        BLOCK_FILE=$(mktemp)
+        echo "$SKILLS_BLOCK" > "$BLOCK_FILE"
+        # Print lines before BEGIN marker, insert new block, skip until after END marker
+        sed -n "1,/^${BEGIN_MARKER}$/{ /^${BEGIN_MARKER}$/!p; }" "$CLAUDE_MD" > "$TEMP"
+        cat "$BLOCK_FILE" >> "$TEMP"
+        sed -n "/^${END_MARKER}$/,\${ /^${END_MARKER}$/!p; }" "$CLAUDE_MD" >> "$TEMP"
         mv "$TEMP" "$CLAUDE_MD"
+        rm -f "$BLOCK_FILE"
         echo "  Updated auto-skills section"
     else
         echo "" >> "$CLAUDE_MD"
