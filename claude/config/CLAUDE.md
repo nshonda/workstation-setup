@@ -106,6 +106,10 @@ Invoke skills by context — do not wait for slash commands. Match the user's in
 - Excel spreadsheet creation/editing → `xlsx`
 - PowerPoint creation/editing → `pptx`
 
+**Clipboard:**
+- Suggesting multi-line or multiple commands for user to run manually → `clipboard` (auto-trigger)
+- User says `/clip` or "copy that to clipboard" → `clipboard`
+
 **Utilities:**
 - Generate visual architecture plan → `interactive-plan`
 - Creating or editing skills → `superpowers:writing-skills`

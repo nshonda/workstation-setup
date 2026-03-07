@@ -108,6 +108,7 @@ Skills are deployed to `~/.claude/skills/` — see [`claude/skills/`](claude/ski
 | dependency-vulnerability-scanner | Dependency scanning for known vulnerabilities | Custom |
 | devops-infra | Docker, CI/CD, Terraform, K8s, monitoring, deployment strategies | Custom |
 | subagent-catalog | Browse and install agents from the VoltAgent catalog | Custom |
+| clipboard | Copy commands to system clipboard for pasting into SSH sessions | Custom |
 
 ### Specialist Agents
 
