@@ -130,6 +130,42 @@
             "command": "$HOME/.claude/hooks/slack-schedule-rewrite.sh"
           }
         ]
+      },
+      {
+        "matcher": "mcp__jira-basis__jira_update_issue",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/validate-mcp-inputs.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "mcp__jira-basis__jira_transition_issue",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/validate-mcp-inputs.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "mcp__jira-basis__jira_add_comment",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/validate-mcp-inputs.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "mcp__redmine-onerhino__redmine_request",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/validate-mcp-inputs.sh"
+          }
+        ]
       }
     ],
     "UserPromptSubmit": [

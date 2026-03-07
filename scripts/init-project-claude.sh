@@ -58,11 +58,6 @@ detect_from_package_json() {
     done
 }
 
-    if ! command -v jq &>/dev/null; then
-        echo "WARNING: jq not found, skipping package.json detection" >&2
-        return 0
-    fi
-
 scan_composer_json() {
     local comp="$1"
 
