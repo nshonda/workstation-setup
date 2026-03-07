@@ -249,6 +249,13 @@ if [[ -d "$CLAUDE_DIR/hooks" ]]; then
     echo "Deployed hooks to ~/.claude/hooks/"
 fi
 
+# init-project-claude — deploy to ~/.local/bin for global access
+if [[ -f "$REPO_DIR/scripts/init-project-claude.sh" ]]; then
+    cp "$REPO_DIR/scripts/init-project-claude.sh" ~/.local/bin/init-project-claude
+    chmod +x ~/.local/bin/init-project-claude
+    echo "Deployed ~/.local/bin/init-project-claude"
+fi
+
 # Hookify rules — copy *.local.md files
 for rule in "$CLAUDE_DIR/config"/hookify.*.local.md; do
     [[ -f "$rule" ]] || continue
@@ -497,6 +504,7 @@ echo "  - MCP servers registered in ~/.claude.json"
 if command -v claude &>/dev/null; then
 echo "  - Plugins installed"
 fi
+echo "  - init-project-claude script at ~/.local/bin/"
 echo "  - direnv .envrc files for work/personal directories"
 echo "  - direnv hook in $SHELL_RC"
 echo ""
