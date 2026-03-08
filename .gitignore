@@ -2,3 +2,4 @@
 .claude/
 _research/
 *.log
+.worktrees/
