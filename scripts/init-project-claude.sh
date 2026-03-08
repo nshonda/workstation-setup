@@ -26,7 +26,8 @@ scan_package_json() {
     if echo "$all_deps" | grep -qx "next"; then
         SKILLS+=("next-best-practices" "vercel-react-best-practices")
     fi
-    if echo "$all_deps" | grep -qx "nuxt"; then
+    # Nuxt — exact match OR @*/nuxt-layer-* pattern
+    if echo "$all_deps" | grep -qx "nuxt" || echo "$all_deps" | grep -q "^@.*nuxt-layer"; then
         SKILLS+=("nuxt-dev")
     fi
     if echo "$all_deps" | grep -qx "@supabase/supabase-js"; then
@@ -70,7 +71,11 @@ scan_composer_json() {
     if echo "$all_reqs" | grep -q "^roots/sage\|^roots/bedrock"; then
         SKILLS+=("wp-dev")
     fi
-    if echo "$all_reqs" | grep -q "^laravel/framework"; then
+    # WordPress via wpackagist packages
+    if echo "$all_reqs" | grep -q "^wpackagist-"; then
+        SKILLS+=("wp-dev")
+    fi
+    if echo "$all_reqs" | grep -q "^laravel/framework\|^laravel/laravel"; then
         SKILLS+=("laravel-dev")
     fi
 }
@@ -94,17 +99,44 @@ detect_from_composer_json() {
 }
 
 detect_from_directory_structure() {
-    # WordPress: wp-content/ directory or wp-config.php
-    if [[ -d "$PROJECT_DIR/wp-content" ]] || [[ -f "$PROJECT_DIR/wp-config.php" ]]; then
+    # WordPress: wp-content/ directory, wp-config.php, or themes/ with WP theme style.css
+    if [[ -d "$PROJECT_DIR/wp-content" ]] || [[ -f "$PROJECT_DIR/wp-config.php" ]] || \
+       { [[ -d "$PROJECT_DIR/themes" ]] && ls "$PROJECT_DIR"/themes/*/style.css &>/dev/null; }; then
         if [[ ! " ${SKILLS[*]:-} " =~ " wp-dev " ]]; then
             SKILLS+=("wp-dev")
         fi
+    fi
+
+    # Nuxt: nuxt.config.ts or nuxt.config.js
+    if [[ -f "$PROJECT_DIR/nuxt.config.ts" ]] || [[ -f "$PROJECT_DIR/nuxt.config.js" ]]; then
+        if [[ ! " ${SKILLS[*]:-} " =~ " nuxt-dev " ]]; then
+            SKILLS+=("nuxt-dev")
+        fi
+    fi
+
+    # Vue (standalone, not Nuxt) — check nested package.json too
+    for pkg in "$PROJECT_DIR"/package.json "$PROJECT_DIR"/*/package.json; do
+        [[ -f "$pkg" ]] || continue
+        local vue_deps
+        vue_deps=$(jq -r '(.dependencies // {}) + (.devDependencies // {}) | keys[]' "$pkg" 2>/dev/null) || continue
+        if echo "$vue_deps" | grep -qx "vue" && ! echo "$vue_deps" | grep -qx "nuxt"; then
+            if [[ ! " ${SKILLS[*]:-} " =~ " vercel-react-best-practices " ]]; then
+                SKILLS+=("vercel-react-best-practices")
+            fi
+        fi
+    done
+}
+
+detect_from_ansible() {
+    if [[ -f "$PROJECT_DIR/playbook.yml" ]] || [[ -f "$PROJECT_DIR/site.yml" ]] || [[ -d "$PROJECT_DIR/roles" && -d "$PROJECT_DIR/inventory" ]]; then
+        SKILLS+=("devops-infra")
     fi
 }
 
 detect_from_package_json
 detect_from_composer_json
 detect_from_directory_structure
+detect_from_ansible
 
 # Deduplicate
 if [[ ${#SKILLS[@]} -gt 0 ]]; then
