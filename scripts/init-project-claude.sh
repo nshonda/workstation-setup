@@ -362,21 +362,23 @@ run_audit() {
                 PROJECT_DIR="$repo_dir"
                 CLAUDE_MD="$repo_dir/CLAUDE.md"
                 scaffold_research_dir
+
+                # Create stub CLAUDE.md if missing (every repo needs one)
+                if [[ ! -f "$CLAUDE_MD" ]]; then
+                    cat > "$CLAUDE_MD" << 'STUB'
+# CLAUDE.md
+
+This file provides guidance to Claude Code when working with code in this repository.
+STUB
+                    echo "    Created CLAUDE.md"
+                fi
+
                 if [[ ${#SKILLS[@]} -gt 0 ]]; then
                     scaffold_claude_rules
 
                     # Update/create CLAUDE.md auto-skills section
                     SKILLS_BLOCK=$(generate_skills_section)
-                    if [[ ! -f "$CLAUDE_MD" ]]; then
-                        cat > "$CLAUDE_MD" << NEWFILE
-# CLAUDE.md
-
-This file provides guidance to Claude Code when working with code in this repository.
-
-$SKILLS_BLOCK
-NEWFILE
-                        echo "    Created CLAUDE.md"
-                    elif grep -q "$BEGIN_MARKER" "$CLAUDE_MD"; then
+                    if grep -q "$BEGIN_MARKER" "$CLAUDE_MD"; then
                         TEMP=$(mktemp)
                         BLOCK_FILE=$(mktemp)
                         echo "$SKILLS_BLOCK" > "$BLOCK_FILE"
@@ -447,7 +449,16 @@ fi
 scaffold_research_dir
 
 if [[ ${#SKILLS[@]} -eq 0 ]]; then
-    echo "$(basename "$PROJECT_DIR"): no framework detected — scaffolded _research/ only"
+    # Still create a stub CLAUDE.md if missing — every repo needs one
+    if [[ ! -f "$CLAUDE_MD" ]]; then
+        cat > "$CLAUDE_MD" << 'STUB'
+# CLAUDE.md
+
+This file provides guidance to Claude Code when working with code in this repository.
+STUB
+        echo "  Created CLAUDE.md"
+    fi
+    echo "$(basename "$PROJECT_DIR"): no framework detected — scaffolded _research/ and CLAUDE.md"
     exit 0
 fi
 
