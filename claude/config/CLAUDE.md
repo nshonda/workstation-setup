@@ -25,43 +25,9 @@ Always prefer integrated tools (MCP servers, plugins, skills) over manual altern
 
 If an MCP server or plugin can do the job, use it. Only fall back to CLI tools or manual approaches when no integrated tool covers the use case.
 
-## Skill Routing
+@includes/skill-routing.md
 
-Most skills self-describe their triggers. Only disambiguation and non-obvious routing listed here.
-
-**Workflow sequence:** brainstorming → worktree → TDD → implementation → verification-before-completion
-
-**Disambiguation:**
-- PR review → `code-review:code-review` (quick) or `pr-review-toolkit:review-pr` (thorough)
-- Commit → `commit-commands:commit` | Commit + push + PR → `commit-commands:commit-push-pr`
-
-**Non-obvious routing:**
-- Plan with independent tasks → `superpowers:subagent-driven-development`
-- Plan from separate session → `superpowers:executing-plans`
-- Bug/test failure → `superpowers:systematic-debugging`
-- Creating/editing skills → `superpowers:writing-skills`
-
-**Specialist agents (~/.claude/agents/):**
-- Architecture/DDD/tech debt → `architect-reviewer` (opus)
-- MCP servers/clients → `mcp-developer` (sonnet)
-
-## Subagent Rules
-
-When using the Task tool, **always include this instruction at the start of every subagent prompt**:
-
-> As your first action, read `/Users/natalihonda/.claude/CLAUDE.md` and follow all rules in it. Pay special attention to Tool Priority (prefer MCP servers over CLI/web search — especially context7 for library docs via ToolSearch). Also read the project-level CLAUDE.md if one exists in the working directory.
-
-This ensures subagents inherit the full global config — tool priority, conventions, git rules, and everything else — without maintaining a separate copy.
-
-### Model Routing
-
-Match the model to task complexity:
-
-- **haiku** — simple file lookups, grep searches, straightforward single-file edits, quick code generation
-- **sonnet** — multi-file changes, moderate refactors, standard feature work, code review
-- **opus** — architectural decisions, complex debugging, security-sensitive code, cross-cutting changes
-
-Default to haiku when unsure — escalate only when the task clearly needs deeper reasoning.
+@includes/subagent-rules.md
 
 ## Git Commits
 
@@ -76,8 +42,6 @@ Default to haiku when unsure — escalate only when the task clearly needs deepe
 - Single-file config/doc/markdown edits
 - Typo fixes or comment-only changes
 
-This prevents collisions when multiple Claude Code sessions run in the same repo.
-
 ## Anti-Hallucination Guards
 
 - Before updating or transitioning a Jira issue, always `jira_get_issue` first to confirm it exists and verify current status.
@@ -90,16 +54,13 @@ This prevents collisions when multiple Claude Code sessions run in the same repo
 
 - When generating markdown text intended for Redmine, use Textile formatting syntax per: https://www.redmine.org/projects/redmine/wiki/RedmineTextFormattingTextile
 - Project-level CLAUDE.md files inherit all global conventions — avoid duplicating them
-
-## Jira Branch Names
-
-Format: `{ISSUE_KEY}-{summary-in-kebab-case}` (e.g., `PROJ-123-fix-the-broken-thing`). Derive key and summary from `jira_get_issue`.
+- Jira branch name format: `{ISSUE_KEY}-{summary-in-kebab-case}` — derive from `jira_get_issue`
 
 ## Research Folder
 
 - Use `_research/` at the project root for dev research notes, architecture docs, and planning context. This folder is for local development only and must always be gitignored.
 - When starting a task, read all files in `_research/` for project context — treat them as extensions of CLAUDE.md.
 - When doing research or planning for a project, save notes and findings to `_research/` as markdown files.
-- **Override plugin defaults:** Skills/plugins that write to `docs/plans/` (e.g., `writing-plans`, `brainstorming`, `subagent-driven-development`) MUST use `_research/` instead. Replace `docs/plans/YYYY-MM-DD-<name>.md` with `_research/YYYY-MM-DD-<name>.md`. Never create a `docs/plans/` directory.
+- **Override plugin defaults:** Skills/plugins that write to `docs/plans/` MUST use `_research/` instead. Never create a `docs/plans/` directory.
 
 @RTK.md
