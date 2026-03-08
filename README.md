@@ -1,14 +1,39 @@
 # workstation-setup
 
-Script-driven setup for multi-GitHub account development workstations. One command sets up SSH, git, GitHub CLI, and Claude Code across macOS and WSL/Linux.
+Script-driven setup for multi-GitHub account development workstations. One config file, one command — consistent SSH, git, GitHub CLI, and Claude Code across macOS and WSL/Linux. Fork it, fill in `config.env`, run `./setup.sh` on any new machine.
 
 ## Quick Start
 
 ```bash
 git clone git@github.com:<YOUR_USERNAME>/workstation-setup.git ~/workstation/personal/workstation-setup
 cd ~/workstation/personal/workstation-setup
+cp config.env.example config.env
+# Edit config.env with your values
 ./setup.sh
 ```
+
+## Configuration
+
+All configuration lives in `config.env` (gitignored). Copy the example and fill in your values:
+
+| Variable | Required | Where to get it |
+|----------|----------|-----------------|
+| `WS_FULL_NAME` | Yes | Your name for git commits |
+| `WS_PERSONAL_EMAIL` | Yes | Email for personal repos |
+| `WS_WORK_EMAIL` | Yes | Email for work repos |
+| `WS_PERSONAL_GH_USER` | Yes | Your personal GitHub username |
+| `WS_WORK_GH_USER` | Yes | Your work GitHub username |
+| `GH_PERSONAL_TOKEN` | Yes | [github.com/settings/tokens](https://github.com/settings/tokens) (personal account) |
+| `GH_WORK_TOKEN` | Yes | [github.com/settings/tokens](https://github.com/settings/tokens) (work account) |
+| `JIRA_URL` | No | e.g. `company.atlassian.net` — leave blank to skip |
+| `JIRA_EMAIL` | No | Your Atlassian account email |
+| `JIRA_TOKEN` | No | [Atlassian API tokens](https://id.atlassian.com/manage-profile/security/api-tokens) |
+| `REDMINE_URL` | No | e.g. `redmine.example.com` — leave blank to skip |
+| `REDMINE_KEY` | No | Redmine > My Account > API access key |
+| `CONTEXT7_KEY` | No | [context7.com/dashboard](https://context7.com) > API Keys |
+| `GCS_BUCKET` | No | See [GCS setup](docs/gcs-setup.md) |
+
+Credentials are stored in the system keychain (macOS Keychain / gnome-keyring) on first run. The `config.env` file is only read at setup time.
 
 ## What It Does
 
@@ -16,10 +41,11 @@ cd ~/workstation/personal/workstation-setup
 2. **SSH** — generates keys for personal + work GitHub accounts with host aliases
 3. **Git** — configures identity with conditional includes (work email for `~/workstation/work/`)
 4. **GitHub CLI** — authenticates both accounts, installs auto-switch wrapper
-5. **Claude Code** (optional) — deploys config, skills, hooks, MCP servers, plugins; global config includes subagent rules that propagate tool priority (context7, MCP servers) and conventions to all spawned subagents
+5. **Claude Code** — deploys config, skills, hooks, MCP servers, plugins; global config includes subagent rules that propagate tool priority (context7, MCP servers) and conventions to all spawned subagents
 
 ## Repo Structure
 
+- `config.env.example` — configuration template (copy to `config.env`)
 - `scripts/` — setup scripts (all idempotent, safe to re-run)
 - `claude/` — Claude Code configuration (deployed to `~/.claude/` by setup-claude.sh)
 - `docs/` — reference documentation
@@ -69,16 +95,12 @@ From [claude-plugins-official](https://github.com/anthropics/claude-plugins-offi
 | [claude-md-management](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/claude-md-management) | Audit and improve CLAUDE.md files |
 | [claude-code-setup](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/claude-code-setup) | Recommend Claude Code automations for a project |
 | [github](https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/github) | GitHub MCP server (issues, PRs, repos) |
-| [supabase](https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/supabase) | Supabase integration |
-| [typescript-lsp](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/typescript-lsp) | TypeScript language server |
-| [php-lsp](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/php-lsp) | PHP language server |
 
 Third-party:
 
 | Plugin | Purpose |
 |--------|---------|
 | [openbrowser](https://github.com/billy-enrizky/openbrowser-ai) | Browser automation, testing, screenshots, web scraping |
-| [pro-workflow](https://github.com/rohitg00/pro-workflow) | Session management, learning capture, smart commits |
 
 ### Claude Code Skills (bundled)
 
@@ -97,18 +119,17 @@ Skills are deployed to `~/.claude/skills/` — see [`claude/skills/`](claude/ski
 | nuxt-dev | Nuxt 3/4 framework conventions | [Nuxt docs](https://nuxt.com/docs) |
 | wp-dev | WordPress plugin/theme development | [WordPress Developer Resources](https://developer.wordpress.org/) |
 | performance | Web performance optimization | [web.dev](https://web.dev/performance/) |
-| core-web-vitals | LCP, INP, CLS optimization | [web.dev Core Web Vitals](https://web.dev/vitals/) |
 | accessibility | WCAG 2.1 compliance audit | [WCAG 2.1](https://www.w3.org/TR/WCAG21/) |
 | seo | Search engine optimization | [web.dev SEO](https://web.dev/learn/seo/) |
 | best-practices | Security headers, modern APIs | [web.dev](https://web.dev/) |
 | docs | Documentation generation (changelogs, READMEs, ADRs, release notes) | Custom |
 | api-design | REST API design patterns (resources, status codes, pagination, errors) | Custom |
-| clean-code-architecture | SOLID, design patterns, clean architecture, refactoring | Custom |
 | database-migrations | Schema changes, data migrations, rollbacks, zero-downtime deploys | Custom |
-| dependency-vulnerability-scanner | Dependency scanning for known vulnerabilities | Custom |
 | devops-infra | Docker, CI/CD, Terraform, K8s, monitoring, deployment strategies | Custom |
 | subagent-catalog | Browse and install agents from the VoltAgent catalog | Custom |
 | clipboard | Copy commands to system clipboard for pasting into SSH sessions | Custom |
+| wrap-up | End-of-session context saving and handoff prep | Custom |
+| handoff | Create handoff documents for session/colleague transfer | Custom |
 
 ### Specialist Agents
 
@@ -118,9 +139,6 @@ Subagent definitions in `claude/agents/`, spawned via the Task tool for targeted
 |-------|-------|---------|
 | architect-reviewer | opus | Architecture review, DDD, CQRS, tech debt assessment |
 | mcp-developer | sonnet | Build and debug MCP servers and clients |
-| prompt-engineer | sonnet | Prompt design, optimization, A/B testing for LLMs |
-| dx-optimizer | sonnet | Developer experience (build times, HMR, test speed) |
-| knowledge-synthesizer | sonnet | Extract patterns and learnings from completed workflows |
 
 ### Hooks
 
@@ -130,8 +148,10 @@ Hook scripts in `claude/hooks/`, wired via `settings.json`:
 |------|-------|---------|
 | `strip-co-authored-by.sh` | PreToolUse:Bash | Strip `Co-Authored-By: Claude` and self-attribution from git/gh commands |
 | `strip-attribution-mcp.sh` | PreToolUse:mcp | Strip self-attribution from MCP tool calls (PR descriptions, comments) |
+| `slack-schedule-rewrite.sh` | PreToolUse:mcp | Rewrite `send_message` → `schedule_message` to avoid Slack attribution |
+| `validate-mcp-inputs.sh` | PreToolUse:mcp | Validate MCP tool inputs before execution |
 | `rtk-rewrite.sh` | PreToolUse:Bash | Rewrite CLI commands through RTK proxy for token savings |
-| `replay-learnings.js` | SessionStart | Surface relevant past learnings at conversation start |
+| `cross-project-memory.js` | SessionStart | Surface relevant past learnings at conversation start |
 
 ### Hookify Rules
 

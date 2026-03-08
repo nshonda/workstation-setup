@@ -2,12 +2,13 @@
 
 ## Project Overview
 
-Script-driven workstation setup for multi-GitHub account development. Sets up SSH keys, git conditional identity, GitHub CLI multi-account auth, and Claude Code configuration (MCP servers, skills, hooks, plugins) — all from a single `setup.sh`.
+Script-driven workstation setup for multi-GitHub account development. One config file (`config.env`), one command (`./setup.sh`) — consistent SSH keys, git identity, GitHub CLI auth, and Claude Code configuration across any machine.
 
 ## Key Commands
 
 ```bash
-./setup.sh                      # Full setup (interactive)
+cp config.env.example config.env # Configure once
+./setup.sh                      # Full setup
 ./scripts/setup-mac.sh          # macOS dependencies only
 ./scripts/setup-wsl.sh          # WSL/Linux dependencies only
 ./scripts/setup-shell.sh        # Shell env: zsh, OMZ, Spaceship, nvm, font
@@ -32,6 +33,7 @@ init-project-claude             # Bootstrap Claude Code for a project (or --audi
 ## Structure
 
 ```
+config.env.example          # Configuration template (cp to config.env)
 setup.sh                    # Entry point
 scripts/
   setup-mac.sh              # macOS deps (brew)
@@ -42,6 +44,7 @@ scripts/
   setup-gh.sh               # GitHub CLI multi-account auth
   setup-claude.sh           # Claude Code setup (MCP, config, skills, plugins)
   install-commands.sh       # gh auto-switch wrapper
+  init-project-claude.sh   # Bootstrap Claude Code for a project (--audit to scan all)
 claude/
   config/
     CLAUDE.md               # Global Claude instructions -> ~/.claude/CLAUDE.md
@@ -58,8 +61,9 @@ claude/
     strip-co-authored-by.sh  # Strip Co-Authored-By from git commands
     strip-attribution-mcp.sh # Strip self-attribution from MCP tool calls
     slack-schedule-rewrite.sh # Rewrite send_message -> schedule_message to avoid attribution
+    validate-mcp-inputs.sh   # Validate MCP tool inputs before execution
     rtk-rewrite.sh           # Rewrite CLI commands through RTK proxy
-    replay-learnings.js      # Surface past learnings on session start
+    cross-project-memory.js  # Surface past learnings on session start
 docs/
   ssh-github-multi-account.md
   wsl-setup.md

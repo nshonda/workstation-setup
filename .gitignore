@@ -3,3 +3,4 @@
 _research/
 *.log
 .worktrees/
+config.env

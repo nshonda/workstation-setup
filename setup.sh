@@ -2,29 +2,47 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")/scripts" && pwd)"
+REPO_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 echo "=== Workstation Setup ==="
 echo ""
 
-# ---------- Collect identity info ----------
+# ---------- Load config ----------
 
-echo "--- Identity ---"
-echo ""
+CONFIG_FILE="$REPO_DIR/config.env"
 
-read -p "Full name: " WS_FULL_NAME
-read -p "Personal email: " WS_PERSONAL_EMAIL
-read -p "Work email: " WS_WORK_EMAIL
-read -p "Personal GitHub username: " WS_PERSONAL_GH_USER
-read -p "Work GitHub username: " WS_WORK_GH_USER
+if [[ ! -f "$CONFIG_FILE" ]]; then
+    echo "Error: config.env not found."
+    echo "  cp config.env.example config.env"
+    echo "  # Fill in your values, then re-run ./setup.sh"
+    exit 1
+fi
 
-[[ -n "$WS_FULL_NAME" ]]         || { echo "Error: Full name is required."; exit 1; }
-[[ -n "$WS_PERSONAL_EMAIL" ]]    || { echo "Error: Personal email is required."; exit 1; }
-[[ -n "$WS_WORK_EMAIL" ]]        || { echo "Error: Work email is required."; exit 1; }
-[[ -n "$WS_PERSONAL_GH_USER" ]]  || { echo "Error: Personal GitHub username is required."; exit 1; }
-[[ -n "$WS_WORK_GH_USER" ]]      || { echo "Error: Work GitHub username is required."; exit 1; }
+# shellcheck source=/dev/null
+source "$CONFIG_FILE"
+
+# Validate required vars
+for var in WS_FULL_NAME WS_PERSONAL_EMAIL WS_WORK_EMAIL WS_PERSONAL_GH_USER WS_WORK_GH_USER GH_PERSONAL_TOKEN GH_WORK_TOKEN; do
+    if [[ -z "${!var:-}" ]]; then
+        echo "Error: $var is required in config.env"
+        exit 1
+    fi
+done
 
 export WS_FULL_NAME WS_PERSONAL_EMAIL WS_WORK_EMAIL WS_PERSONAL_GH_USER WS_WORK_GH_USER
 
+# Export optional vars for setup-claude.sh
+export GH_PERSONAL_TOKEN="${GH_PERSONAL_TOKEN:-}"
+export GH_WORK_TOKEN="${GH_WORK_TOKEN:-}"
+export JIRA_URL="${JIRA_URL:-}"
+export JIRA_EMAIL="${JIRA_EMAIL:-}"
+export JIRA_TOKEN="${JIRA_TOKEN:-}"
+export REDMINE_URL="${REDMINE_URL:-}"
+export REDMINE_KEY="${REDMINE_KEY:-}"
+export CONTEXT7_KEY="${CONTEXT7_KEY:-}"
+export GCS_BUCKET="${GCS_BUCKET:-}"
+
+echo "Config loaded: $CONFIG_FILE"
 echo ""
 
 # ---------- Platform setup ----------
@@ -58,13 +76,8 @@ mkdir -p ~/workstation/personal ~/workstation/work
 # Shell commands (gh auto-switch wrapper)
 "$SCRIPT_DIR/install-commands.sh"
 
-# Claude Code setup (optional)
-echo ""
-read -p "Set up Claude Code (MCP servers, config, skills, plugins)? [y/N] " -n 1 -r
-echo ""
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-    "$SCRIPT_DIR/setup-claude.sh"
-fi
+# Claude Code setup
+"$SCRIPT_DIR/setup-claude.sh"
 
 echo ""
 echo "=== Setup complete ==="

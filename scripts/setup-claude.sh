@@ -11,9 +11,24 @@ CLAUDE_DIR="$REPO_DIR/claude"
 echo "=== Claude Code Setup ==="
 echo ""
 
-# Require identity env vars from setup.sh
+# Require identity env vars from setup.sh (or export them before running standalone)
 : "${WS_PERSONAL_GH_USER:?Set WS_PERSONAL_GH_USER before running this script}"
 : "${WS_WORK_GH_USER:?Set WS_WORK_GH_USER before running this script}"
+
+# Optional vars — default to empty if not set
+GH_PERSONAL_TOKEN="${GH_PERSONAL_TOKEN:-}"
+GH_WORK_TOKEN="${GH_WORK_TOKEN:-}"
+JIRA_URL="${JIRA_URL:-}"
+JIRA_EMAIL="${JIRA_EMAIL:-}"
+JIRA_TOKEN="${JIRA_TOKEN:-}"
+REDMINE_URL="${REDMINE_URL:-}"
+REDMINE_KEY="${REDMINE_KEY:-}"
+CONTEXT7_KEY="${CONTEXT7_KEY:-}"
+GCS_BUCKET="${GCS_BUCKET:-}"
+
+# Strip protocol/trailing slash from URLs if present
+JIRA_URL="${JIRA_URL#https://}"; JIRA_URL="${JIRA_URL#http://}"; JIRA_URL="${JIRA_URL%/}"
+REDMINE_URL="${REDMINE_URL#https://}"; REDMINE_URL="${REDMINE_URL#http://}"; REDMINE_URL="${REDMINE_URL%/}"
 
 # ---------- Platform detection ----------
 
@@ -42,62 +57,6 @@ if ! command -v jq &>/dev/null; then
     echo "ERROR: jq is required. Install it first (brew install jq / apt install jq)."
     exit 1
 fi
-
-# ---------- 2. Prompt for credentials ----------
-
-echo ""
-echo "--- Credentials ---"
-echo ""
-
-echo "GitHub Personal Token (${WS_PERSONAL_GH_USER})"
-echo "  Create at: https://github.com/settings/tokens"
-read -sp "  Token (Enter to skip): " GH_PERSONAL_TOKEN
-echo ""
-
-echo "GitHub Work Token (${WS_WORK_GH_USER})"
-echo "  Create at: https://github.com/settings/tokens (work account)"
-read -sp "  Token (Enter to skip): " GH_WORK_TOKEN
-echo ""
-
-echo ""
-echo "--- Jira Configuration ---"
-read -p "Jira URL (e.g., company.atlassian.net, Enter to skip): " JIRA_URL
-if [[ -n "$JIRA_URL" ]]; then
-    JIRA_URL="${JIRA_URL#https://}"
-    JIRA_URL="${JIRA_URL#http://}"
-    JIRA_URL="${JIRA_URL%/}"
-    read -p "Jira email: " JIRA_EMAIL
-    echo "  Get your API token from: https://id.atlassian.com/manage-profile/security/api-tokens"
-    read -sp "Jira API token: " JIRA_TOKEN
-    echo ""
-else
-    JIRA_EMAIL=""
-    JIRA_TOKEN=""
-fi
-
-echo ""
-echo "--- Redmine Configuration ---"
-read -p "Redmine URL (e.g., redmine.example.com, Enter to skip): " REDMINE_URL
-if [[ -n "$REDMINE_URL" ]]; then
-    REDMINE_URL="${REDMINE_URL#https://}"
-    REDMINE_URL="${REDMINE_URL#http://}"
-    REDMINE_URL="${REDMINE_URL%/}"
-    echo "  Get your API key from: Redmine > My Account > API access key"
-    read -sp "Redmine API key: " REDMINE_KEY
-    echo ""
-else
-    REDMINE_KEY=""
-fi
-
-echo ""
-echo "--- Context7 Configuration ---"
-echo "  Get your API key from: https://context7.com (sign up for free)"
-read -sp "Context7 API key (or press Enter to skip): " CONTEXT7_KEY
-echo ""
-
-echo ""
-echo "--- GCS Configuration ---"
-read -p "GCS bucket for interactive plans (or press Enter to skip): " GCS_BUCKET
 
 # ---------- 3. Store credentials in keychain ----------
 
