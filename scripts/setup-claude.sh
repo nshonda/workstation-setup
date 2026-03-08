@@ -207,6 +207,13 @@ if [[ -f "$CLAUDE_DIR/config/CLAUDE.md" ]]; then
     echo "Deployed ~/.claude/CLAUDE.md"
 fi
 
+# includes/ directory (referenced by CLAUDE.md via @includes/)
+if [[ -d "$CLAUDE_DIR/config/includes" ]]; then
+    mkdir -p ~/.claude/includes
+    cp -R "$CLAUDE_DIR/config/includes/"* ~/.claude/includes/
+    echo "Deployed ~/.claude/includes/"
+fi
+
 # RTK.md
 if [[ -f "$CLAUDE_DIR/config/RTK.md" ]]; then
     cp "$CLAUDE_DIR/config/RTK.md" ~/.claude/RTK.md
