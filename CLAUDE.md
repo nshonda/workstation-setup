@@ -16,6 +16,7 @@ Script-driven workstation setup for multi-GitHub account development. Sets up SS
 ./scripts/setup-gh.sh           # GitHub CLI multi-account auth
 ./scripts/setup-claude.sh       # Claude Code: MCP, config, skills, plugins
 ./scripts/install-commands.sh   # Shell gh() auto-switch wrapper
+init-project-claude             # Bootstrap Claude Code for a project (or --audit to scan all)
 ```
 
 ## Architecture
@@ -45,6 +46,9 @@ claude/
   config/
     CLAUDE.md               # Global Claude instructions -> ~/.claude/CLAUDE.md
     RTK.md                  # RTK reference -> ~/.claude/RTK.md
+    includes/
+      skill-routing.md      # @include -> ~/.claude/includes/skill-routing.md
+      subagent-rules.md     # @include -> ~/.claude/includes/subagent-rules.md
     settings.json           # Permissions, hooks, plugins -> ~/.claude/settings.json
     settings.local.json     # Per-machine overrides -> ~/.claude/settings.local.json
     hookify.*.local.md      # Hookify rule files -> ~/.claude/
