@@ -83,7 +83,15 @@
       "Bash(rtk discover:*)",
       "Bash(rtk --version:*)",
       "Bash(docker ps:*)",
-      "Bash(docker images:*)"
+      "Bash(docker images:*)",
+      "Bash(direnv version:*)",
+      "Bash(gh auth:*)",
+      "Bash(security add-generic-password:*)",
+      "Bash(secret-tool store:*)",
+      "Bash(secret-tool lookup:*)",
+      "Bash(direnv allow:*)",
+      "Bash(direnv exec:*)",
+      "Bash(xargs:*)"
     ]
   },
   "hooks": {

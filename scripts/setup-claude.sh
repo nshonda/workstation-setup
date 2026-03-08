@@ -24,7 +24,7 @@ JIRA_TOKEN="${JIRA_TOKEN:-}"
 REDMINE_URL="${REDMINE_URL:-}"
 REDMINE_KEY="${REDMINE_KEY:-}"
 CONTEXT7_KEY="${CONTEXT7_KEY:-}"
-GCS_BUCKET="${GCS_BUCKET:-}"
+GCS_BUCKET="${GCS_BUCKET:-}"  # Used for direnv .envrc generation
 
 # Strip protocol/trailing slash from URLs if present
 JIRA_URL="${JIRA_URL#https://}"; JIRA_URL="${JIRA_URL#http://}"; JIRA_URL="${JIRA_URL%/}"
@@ -192,25 +192,10 @@ if [[ -f "$CLAUDE_DIR/config/settings.json" ]]; then
     fi
 fi
 
-# settings.local.json — only if doesn't exist
-if [[ -f "$CLAUDE_DIR/config/settings.local.json" ]]; then
-    if [[ ! -f ~/.claude/settings.local.json ]]; then
-        cp "$CLAUDE_DIR/config/settings.local.json" ~/.claude/settings.local.json
-        echo "Deployed ~/.claude/settings.local.json"
-    else
-        echo "~/.claude/settings.local.json already exists, skipping"
-    fi
-fi
 
 # Skills — copy all
 if [[ -d "$CLAUDE_DIR/skills" ]]; then
     cp -R "$CLAUDE_DIR/skills/"* ~/.claude/skills/ 2>/dev/null || true
-    # Fill in GCS bucket if provided
-    if [[ -n "${GCS_BUCKET:-}" ]] && [[ -f ~/.claude/skills/interactive-plan/SKILL.md ]]; then
-        ESCAPED_BUCKET=$(printf '%s\n' "$GCS_BUCKET" | sed 's/[&/\]/\\&/g')
-        sed -i.bak "s|<YOUR_GCS_BUCKET>|${ESCAPED_BUCKET}|g" ~/.claude/skills/interactive-plan/SKILL.md
-        rm -f ~/.claude/skills/interactive-plan/SKILL.md.bak
-    fi
     echo "Deployed skills to ~/.claude/skills/"
 fi
 
@@ -359,6 +344,13 @@ export JIRA_USERNAME="${JIRA_EMAIL}"
 JIRA_INNER
 fi)
 
+$(if [[ -n "$GCS_BUCKET" ]]; then
+cat << GCS_INNER
+# GCS bucket for interactive plan uploads
+export GCS_BUCKET="${GCS_BUCKET}"
+GCS_INNER
+fi)
+
 # GitHub MCP plugin expects GITHUB_PERSONAL_ACCESS_TOKEN
 export GITHUB_PERSONAL_ACCESS_TOKEN="\$GITHUB_TOKEN"
 EOF
@@ -379,6 +371,13 @@ $(if [[ -n "$REDMINE_URL" ]]; then
 cat << REDMINE_INNER
 export REDMINE_URL="https://${REDMINE_URL}"
 REDMINE_INNER
+fi)
+
+$(if [[ -n "$GCS_BUCKET" ]]; then
+cat << GCS_INNER
+# GCS bucket for interactive plan uploads
+export GCS_BUCKET="${GCS_BUCKET}"
+GCS_INNER
 fi)
 
 # GitHub MCP plugin expects GITHUB_PERSONAL_ACCESS_TOKEN

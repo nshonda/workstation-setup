@@ -19,9 +19,9 @@ The user may also request GCS upload conversationally (e.g., "upload it to GCS",
 
 ## Configuration
 
-- **Default GCS bucket:** `<YOUR_GCS_BUCKET>`
+- **Default GCS bucket:** Read from `$GCS_BUCKET` environment variable (set via direnv in `config.env`)
   - Override per-invocation with `--gcs <bucket-name>`
-  - To change the default, edit this value in the skill file
+  - If `$GCS_BUCKET` is unset and no `--gcs` arg, ask the user for a bucket name
 - **GCS requires:** `gcloud` CLI installed and authenticated (`gcloud auth login`)
 
 ## Process
@@ -97,7 +97,8 @@ Create a single `.html` file (no external dependencies except CDN) containing:
    - If not authenticated, prompt user to run `gcloud auth login`
 3. Determine bucket:
    - Use explicit bucket from args if provided
-   - Otherwise use the default: `<YOUR_GCS_BUCKET>`
+   - Otherwise read `$GCS_BUCKET` env var (run `echo $GCS_BUCKET` to get it)
+   - If neither is available, ask the user
 4. Generate a filename: `plan-<project-name>-<YYYY-MM-DD>.html`
 5. Upload: `gcloud storage cp <file> gs://<bucket>/<filename>`
 6. Make publicly readable (if bucket allows): `gcloud storage objects update gs://<bucket>/<filename> --add-acl-grant=entity=allUsers,role=READER`

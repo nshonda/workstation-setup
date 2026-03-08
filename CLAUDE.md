@@ -53,7 +53,6 @@ claude/
       skill-routing.md      # @include -> ~/.claude/includes/skill-routing.md
       subagent-rules.md     # @include -> ~/.claude/includes/subagent-rules.md
     settings.json           # Permissions, hooks, plugins -> ~/.claude/settings.json
-    settings.local.json     # Per-machine overrides -> ~/.claude/settings.local.json
     hookify.*.local.md      # Hookify rule files -> ~/.claude/
   skills/                   # All skills -> ~/.claude/skills/
   agents/                   # Subagent definitions -> ~/.claude/agents/
