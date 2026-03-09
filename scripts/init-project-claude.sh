@@ -262,6 +262,48 @@ scaffold_claude_rules() {
     fi
 }
 
+# Map skills to their plugin names for settings.json enabledPlugins
+skill_to_plugin() {
+    local skill="$1"
+    case "$skill" in
+        ss-dev|wp-dev|nuxt-dev|laravel-dev|devops-infra) echo "$skill" ;;
+        next-best-practices) echo "next-best-practices" ;;
+        vercel-react-best-practices) echo "vercel-react-best-practices" ;;
+        supabase-postgres-best-practices) echo "supabase-postgres-best-practices" ;;
+        *) return 1 ;;
+    esac
+}
+
+scaffold_settings_json() {
+    local settings_file="$PROJECT_DIR/.claude/settings.json"
+
+    # Only create if we detected skills and file doesn't exist
+    [[ ${#SKILLS[@]} -eq 0 ]] && return 0
+    [[ -f "$settings_file" ]] && return 0
+
+    mkdir -p "$PROJECT_DIR/.claude"
+
+    # Build enabledPlugins JSON
+    local plugins=""
+    for skill in "${SKILLS[@]}"; do
+        local plugin
+        plugin=$(skill_to_plugin "$skill") || continue
+        if [[ -n "$plugins" ]]; then
+            plugins="$plugins,"
+        fi
+        plugins="$plugins
+    \"$plugin\": true"
+    done
+
+    cat > "$settings_file" << EOF
+{
+  "enabledPlugins": {$plugins
+  }
+}
+EOF
+    echo "  Created .claude/settings.json"
+}
+
 # ---------- Audit Mode ----------
 
 run_audit() {
@@ -269,10 +311,10 @@ run_audit() {
     local total=0
     local issues=0
 
-    printf "\n%-35s %-9s %-7s %-9s %-9s %-7s %-7s %-6s  %s\n" \
-        "REPO" "CLAUDE.md" ".claude" "_research" "gitignore" "skills" "rules" "stale" "FRAMEWORK"
-    printf "%-35s %-9s %-7s %-9s %-9s %-7s %-7s %-6s  %s\n" \
-        "---" "---" "---" "---" "---" "---" "---" "---" "---"
+    printf "\n%-35s %-9s %-7s %-9s %-9s %-7s %-8s %-7s %-6s  %s\n" \
+        "REPO" "CLAUDE.md" ".claude" "_research" "gitignore" "skills" "settings" "rules" "stale" "FRAMEWORK"
+    printf "%-35s %-9s %-7s %-9s %-9s %-7s %-8s %-7s %-6s  %s\n" \
+        "---" "---" "---" "---" "---" "---" "---" "---" "---" "---"
 
     for base in "${base_dirs[@]}"; do
         [[ -d "$base" ]] || continue
@@ -363,7 +405,18 @@ run_audit() {
                 skills_match="-"
             fi
 
-            # Check 5: .claude/rules/ exists with framework rules
+            # Check 5: .claude/settings.json exists (if frameworks detected)
+            local has_settings="✓"
+            if [[ ${#SKILLS[@]} -gt 0 ]]; then
+                if [[ ! -f "$repo_dir/.claude/settings.json" ]]; then
+                    has_settings="✗"
+                    repo_issues=$((repo_issues + 1))
+                fi
+            else
+                has_settings="-"
+            fi
+
+            # Check 7: .claude/rules/ exists with framework rules
             local has_rules="✓"
             if [[ ${#SKILLS[@]} -gt 0 ]]; then
                 if [[ ! -d "$repo_dir/.claude/rules" ]] || [[ ! -f "$repo_dir/.claude/rules/framework.md" ]]; then
@@ -374,7 +427,7 @@ run_audit() {
                 has_rules="-"
             fi
 
-            # Check 6: no stale auto-skills
+            # Check 8: no stale auto-skills
             local no_stale="✓"
             if [[ -f "$repo_dir/CLAUDE.md" ]] && grep -q "<!-- BEGIN auto-skills -->" "$repo_dir/CLAUDE.md" 2>/dev/null; then
                 local listed_skills
@@ -398,9 +451,9 @@ run_audit() {
                 issues=$((issues + 1))
             fi
 
-            printf "  %-33s %-9s %-7s %-9s %-9s %-7s %-7s %-6s  %s\n" \
+            printf "  %-33s %-9s %-7s %-9s %-9s %-7s %-8s %-7s %-6s  %s\n" \
                 "$name" "$has_claude_md" "$has_dot_claude" "$has_research" \
-                "$has_gitignore" "$skills_match" "$has_rules" "$no_stale" "$detected"
+                "$has_gitignore" "$skills_match" "$has_settings" "$has_rules" "$no_stale" "$detected"
 
             # Auto-fix if requested
             if [[ "$FIX" == "true" && $repo_issues -gt 0 ]]; then
@@ -421,6 +474,7 @@ STUB
 
                 if [[ ${#SKILLS[@]} -gt 0 ]]; then
                     scaffold_claude_rules
+                    scaffold_settings_json
 
                     # Update/create CLAUDE.md auto-skills section
                     SKILLS_BLOCK=$(generate_skills_section)
@@ -446,7 +500,7 @@ STUB
 
     echo ""
     echo "Legend: ✓=pass  ✗=missing  ~=partial  ~N=N entries missing  -=n/a"
-    echo "Checks: CLAUDE.md | .claude/ | _research/ | gitignore | skills-match | rules/ | no-stale"
+    echo "Checks: CLAUDE.md | .claude/ | _research/ | gitignore | skills-match | settings.json | rules/ | no-stale"
     echo ""
     echo "Summary: $total repos scanned, $issues need attention."
     if [[ "$FIX" == "false" && $issues -gt 0 ]]; then
@@ -471,6 +525,32 @@ generate_skills_section() {
     done
     echo ""
     echo "$END_MARKER"
+}
+
+# ---------- Commit Summary ----------
+
+print_commit_summary() {
+    local team_files=()
+
+    [[ -f "$PROJECT_DIR/CLAUDE.md" ]] && team_files+=("CLAUDE.md")
+    [[ -f "$PROJECT_DIR/.gitignore" ]] && team_files+=(".gitignore")
+    [[ -f "$PROJECT_DIR/.claude/settings.json" ]] && team_files+=(".claude/settings.json")
+    [[ -f "$PROJECT_DIR/.claude/rules/framework.md" ]] && team_files+=(".claude/rules/framework.md")
+
+    if [[ ${#team_files[@]} -gt 0 ]]; then
+        echo ""
+        echo "Team-shared files (commit these):"
+        for f in "${team_files[@]}"; do
+            echo "  $f"
+        done
+        echo ""
+        echo "Local files (.gitignore'd — not committed):"
+        echo "  .claude/settings.local.json  (personal permissions, auto-builds)"
+        echo "  .claude/.env                 (secrets, if needed)"
+        echo "  .claude/*.local.md           (personal rules)"
+        echo "  _research/                   (dev notes)"
+        echo "  CLAUDE.local.md              (personal overrides)"
+    fi
 }
 
 # ---------- Main ----------
@@ -505,11 +585,13 @@ STUB
         echo "  Created CLAUDE.md"
     fi
     echo "$(basename "$PROJECT_DIR"): no framework detected — scaffolded _research/ and CLAUDE.md"
+    print_commit_summary
     exit 0
 fi
 
-# Scaffold .claude/rules/
+# Scaffold .claude/rules/ and .claude/settings.json
 scaffold_claude_rules
+scaffold_settings_json
 
 echo "$(basename "$PROJECT_DIR"): ${SKILLS[*]}"
 
@@ -541,3 +623,5 @@ else
         echo "  Appended auto-skills section"
     fi
 fi
+
+print_commit_summary
