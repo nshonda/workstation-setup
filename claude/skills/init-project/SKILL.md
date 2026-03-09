@@ -43,10 +43,23 @@ Read dependency files and directory structure in the project root. Check one lev
 
 Deduplicate detected skills.
 
-### 2. Scaffold _research/
+### 2. Scaffold Gitignore
 
 - Create `_research/` directory if missing
-- Ensure it's in `.gitignore` — add it if not present, create `.gitignore` if needed
+- Ensure all Claude Code local-only entries are in `.gitignore` — add missing entries, create `.gitignore` if needed
+
+Required gitignore entries (belt-and-suspenders on top of global gitignore):
+
+```gitignore
+# Claude Code (local-only)
+_research/
+.worktrees/
+.claude/settings.local.json
+.claude/*.local.md
+.claude/*.local.json
+.claude/.env
+CLAUDE.local.md
+```
 
 ### 3. Ensure CLAUDE.md Exists
 
@@ -117,6 +130,7 @@ For each repo, check and report in a table:
 |-------|------|------|
 | CLAUDE.md exists | has file | missing |
 | `_research/` exists and gitignored | both | missing or not ignored |
+| Claude gitignore entries present | all 7 entries | ~N = N entries missing |
 | Auto-skills match detected frameworks | all listed | missing or stale entries |
 | `.claude/rules/framework.md` exists (if frameworks detected) | has file | missing |
 

@@ -162,27 +162,54 @@ detect_from_ansible() {
 
 # ---------- Scaffold Project Structure ----------
 
-scaffold_research_dir() {
+# Entries that must appear in every project's .gitignore for Claude Code.
+# These are belt-and-suspenders on top of the global gitignore — collaborators
+# may not have the global setup, so per-project entries protect them too.
+CLAUDE_GITIGNORE_ENTRIES=(
+    "_research/"
+    ".worktrees/"
+    ".claude/settings.local.json"
+    ".claude/*.local.md"
+    ".claude/*.local.json"
+    ".claude/.env"
+    "CLAUDE.local.md"
+)
+
+scaffold_gitignore() {
+    # Create _research/ directory if missing
     if [[ ! -d "$PROJECT_DIR/_research" ]]; then
         mkdir -p "$PROJECT_DIR/_research"
         echo "  Created _research/"
     fi
 
-    # Ensure _research/ is gitignored
     local gitignore="$PROJECT_DIR/.gitignore"
+    local added=()
+
     if [[ -f "$gitignore" ]]; then
-        if ! grep -qx "_research/" "$gitignore" && ! grep -qx "_research" "$gitignore"; then
+        for entry in "${CLAUDE_GITIGNORE_ENTRIES[@]}"; do
+            # Check for exact line match (with or without trailing slash variants)
+            local base="${entry%/}"
+            if ! grep -qxF "$entry" "$gitignore" && ! grep -qxF "$base" "$gitignore"; then
+                added+=("$entry")
+            fi
+        done
+
+        if [[ ${#added[@]} -gt 0 ]]; then
             echo "" >> "$gitignore"
-            echo "# Claude Code research notes (local only)" >> "$gitignore"
-            echo "_research/" >> "$gitignore"
-            echo "  Added _research/ to .gitignore"
+            echo "# Claude Code (local-only)" >> "$gitignore"
+            for entry in "${added[@]}"; do
+                echo "$entry" >> "$gitignore"
+            done
+            echo "  Added ${#added[@]} Claude entries to .gitignore"
         fi
     else
-        cat > "$gitignore" << 'GITIGNORE'
-# Claude Code research notes (local only)
-_research/
-GITIGNORE
-        echo "  Created .gitignore with _research/"
+        {
+            echo "# Claude Code (local-only)"
+            for entry in "${CLAUDE_GITIGNORE_ENTRIES[@]}"; do
+                echo "$entry"
+            done
+        } > "$gitignore"
+        echo "  Created .gitignore with Claude entries"
     fi
 }
 
@@ -242,10 +269,10 @@ run_audit() {
     local total=0
     local issues=0
 
-    printf "\n%-35s %-9s %-7s %-9s %-7s %-7s %-6s  %s\n" \
-        "REPO" "CLAUDE.md" ".claude" "_research" "skills" "rules" "stale" "FRAMEWORK"
-    printf "%-35s %-9s %-7s %-9s %-7s %-7s %-6s  %s\n" \
-        "---" "---" "---" "---" "---" "---" "---" "---"
+    printf "\n%-35s %-9s %-7s %-9s %-9s %-7s %-7s %-6s  %s\n" \
+        "REPO" "CLAUDE.md" ".claude" "_research" "gitignore" "skills" "rules" "stale" "FRAMEWORK"
+    printf "%-35s %-9s %-7s %-9s %-9s %-7s %-7s %-6s  %s\n" \
+        "---" "---" "---" "---" "---" "---" "---" "---" "---"
 
     for base in "${base_dirs[@]}"; do
         [[ -d "$base" ]] || continue
@@ -282,6 +309,25 @@ run_audit() {
                 repo_issues=$((repo_issues + 1))
             elif [[ -f "$repo_dir/.gitignore" ]] && ! grep -q "_research" "$repo_dir/.gitignore" 2>/dev/null; then
                 has_research="~"  # exists but not gitignored
+                repo_issues=$((repo_issues + 1))
+            fi
+
+            # Check 3b: Claude gitignore entries present
+            local has_gitignore="✓"
+            local missing_count=0
+            if [[ -f "$repo_dir/.gitignore" ]]; then
+                for entry in "${CLAUDE_GITIGNORE_ENTRIES[@]}"; do
+                    local base="${entry%/}"
+                    if ! grep -qxF "$entry" "$repo_dir/.gitignore" && ! grep -qxF "$base" "$repo_dir/.gitignore"; then
+                        missing_count=$((missing_count + 1))
+                    fi
+                done
+                if [[ $missing_count -gt 0 ]]; then
+                    has_gitignore="~${missing_count}"
+                    repo_issues=$((repo_issues + 1))
+                fi
+            else
+                has_gitignore="✗"
                 repo_issues=$((repo_issues + 1))
             fi
 
@@ -352,16 +398,16 @@ run_audit() {
                 issues=$((issues + 1))
             fi
 
-            printf "  %-33s %-9s %-7s %-9s %-7s %-7s %-6s  %s\n" \
+            printf "  %-33s %-9s %-7s %-9s %-9s %-7s %-7s %-6s  %s\n" \
                 "$name" "$has_claude_md" "$has_dot_claude" "$has_research" \
-                "$skills_match" "$has_rules" "$no_stale" "$detected"
+                "$has_gitignore" "$skills_match" "$has_rules" "$no_stale" "$detected"
 
             # Auto-fix if requested
             if [[ "$FIX" == "true" && $repo_issues -gt 0 ]]; then
                 echo "    Fixing $name..."
                 PROJECT_DIR="$repo_dir"
                 CLAUDE_MD="$repo_dir/CLAUDE.md"
-                scaffold_research_dir
+                scaffold_gitignore
 
                 # Create stub CLAUDE.md if missing (every repo needs one)
                 if [[ ! -f "$CLAUDE_MD" ]]; then
@@ -399,8 +445,8 @@ STUB
     done
 
     echo ""
-    echo "Legend: ✓=pass  ✗=missing  ~=partial  -=n/a"
-    echo "Checks: CLAUDE.md | .claude/ | _research/ | skills-match | rules/ | no-stale"
+    echo "Legend: ✓=pass  ✗=missing  ~=partial  ~N=N entries missing  -=n/a"
+    echo "Checks: CLAUDE.md | .claude/ | _research/ | gitignore | skills-match | rules/ | no-stale"
     echo ""
     echo "Summary: $total repos scanned, $issues need attention."
     if [[ "$FIX" == "false" && $issues -gt 0 ]]; then
@@ -445,8 +491,8 @@ if [[ ${#SKILLS[@]} -gt 0 ]]; then
     mapfile -t SKILLS < <(printf '%s\n' "${SKILLS[@]}" | sort -u)
 fi
 
-# Scaffold _research/ always
-scaffold_research_dir
+# Scaffold gitignore entries and _research/ directory
+scaffold_gitignore
 
 if [[ ${#SKILLS[@]} -eq 0 ]]; then
     # Still create a stub CLAUDE.md if missing — every repo needs one
