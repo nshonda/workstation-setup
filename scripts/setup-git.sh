@@ -32,14 +32,28 @@ git config --global --replace-all includeIf."gitdir:~/workstation/work/".path "~
 
 # Global gitignore
 cat > "$HOME/.gitignore_global" <<'EOF'
+# OS
 .DS_Store
 Thumbs.db
+
+# Editors
 *.swp
 *.swo
 *~
 .idea/
 .vscode/
+
+# Logs
 *.log
+
+# Claude Code (local-only artifacts)
+_research/
+.worktrees/
+.claude/settings.local.json
+.claude/*.local.md
+.claude/*.local.json
+.claude/.env
+CLAUDE.local.md
 EOF
 git config --global core.excludesFile "$HOME/.gitignore_global"
 

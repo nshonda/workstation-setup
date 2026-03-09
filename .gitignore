@@ -4,3 +4,10 @@ _research/
 *.log
 .worktrees/
 config.env
+
+# Claude Code (local-only)
+.claude/settings.local.json
+.claude/*.local.md
+.claude/*.local.json
+.claude/.env
+CLAUDE.local.md
