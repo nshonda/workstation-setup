@@ -101,6 +101,10 @@
         "hooks": [
           {
             "type": "command",
+            "command": "$HOME/.claude/hooks/guard-protected-branches.sh"
+          },
+          {
+            "type": "command",
             "command": "$HOME/.claude/hooks/strip-co-authored-by.sh"
           },
           {
