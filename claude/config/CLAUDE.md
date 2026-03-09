@@ -22,6 +22,8 @@ Always prefer integrated tools (MCP servers, plugins, skills) over manual altern
 - **Jira MCP** for all Jira interactions (issues, sprints, boards)
 - **Redmine MCP** for all Redmine interactions
 - **Slack MCP** — two workspaces: `slack-onerhino` (personal/oneRhino) and `slack-basis` (work/Basis). Use the one matching the current workspace context.
+  - **Always use `slack_schedule_message`** (with `post_at` = now + 120 seconds) instead of `slack_send_message`. Direct sends add "Sent using Claude" attribution that can't be stripped. Scheduled messages don't. The user can cancel in Slack's "Drafts & Sent" before delivery if needed.
+  - **Slack uses mrkdwn, not markdown.** Key differences: bold = `*text*` (not `**text**`), italic = `_text_` (not `*text*`), strikethrough = `~text~`, links = `<url|display text>` (not `[text](url)`), code = `` `code` `` and ` ```code block``` `, lists = bullet only (no ordered), blockquote = `>` per line. Never send standard markdown syntax — always convert to mrkdwn before sending.
 
 If an MCP server or plugin can do the job, use it. Only fall back to CLI tools or manual approaches when no integrated tool covers the use case.
 
