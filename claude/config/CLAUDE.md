@@ -33,7 +33,7 @@ If an MCP server or plugin can do the job, use it. Only fall back to CLI tools o
 
 ## Git Safety
 
-- **NEVER push directly to main or master.** Always create a feature branch and open a PR.
+- **NEVER commit or push on main or master.** Always create a feature branch first and open a PR.
 - **NEVER force push** (`--force`, `--force-with-lease`) to any branch.
 - These rules are enforced by the `guard-protected-branches.sh` PreToolUse hook.
 

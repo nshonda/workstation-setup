@@ -1,6 +1,6 @@
 #!/bin/bash
-# PreToolUse:Bash hook — blocks pushes to protected branches (main, master)
-# and all force-push operations. Hard block with deny decision.
+# PreToolUse:Bash hook — blocks commits and pushes on protected branches
+# (main, master) and all force-push operations. Hard block with deny decision.
 
 set -euo pipefail
 
@@ -11,7 +11,22 @@ if [ -z "$CMD" ]; then
   exit 0
 fi
 
-# Only check git push commands
+# Block 0: Committing while on main/master
+if echo "$CMD" | grep -qE '\bgit\s+commit\b'; then
+  CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "unknown")
+  if [ "$CURRENT_BRANCH" = "main" ] || [ "$CURRENT_BRANCH" = "master" ]; then
+    jq -n '{
+      "hookSpecificOutput": {
+        "hookEventName": "PreToolUse",
+        "permissionDecision": "deny",
+        "permissionDecisionReason": "BLOCKED: Committing on main/master is not allowed. Create a feature branch first (git checkout -b <branch-name>)."
+      }
+    }'
+    exit 0
+  fi
+fi
+
+# Only check git push commands from here
 if ! echo "$CMD" | grep -qE '\bgit\s+push\b'; then
   exit 0
 fi
