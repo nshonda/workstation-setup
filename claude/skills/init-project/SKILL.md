@@ -1,6 +1,6 @@
 ---
 name: init-project
-description: Use when bootstrapping Claude Code for a project after running /init, or when auditing Claude Code readiness across all repos. Detects frameworks, injects skill references, scaffolds _research/, and creates .claude/rules/.
+description: Use when bootstrapping Claude Code for a project after running /init, or when auditing Claude Code readiness across all repos. Detects frameworks, injects skill references, scaffolds _research/, creates .claude/rules/ and .claude/settings.json.
 ---
 
 # Init Project
@@ -116,9 +116,26 @@ Map each skill to its trigger context:
 | `laravel-dev` | For Laravel PHP files |
 | `devops-infra` | For infrastructure and deployment files |
 
-### 6. Report
+### 6. Create .claude/settings.json
 
-Print a summary: project name, detected frameworks, and what was created/updated.
+If frameworks were detected and no `settings.json` exists, create `.claude/settings.json` with `enabledPlugins` matching the detected skills. This is the team-shared settings file — committed to the repo so all team members get the same plugin config.
+
+### 7. Report
+
+Print a summary: project name, detected frameworks, what was created/updated, and which files to commit.
+
+**Team-shared files (commit these):**
+- `CLAUDE.md`
+- `.gitignore`
+- `.claude/settings.json`
+- `.claude/rules/framework.md`
+
+**Local files (gitignored — per-developer):**
+- `.claude/settings.local.json` — personal permissions, auto-builds as you approve tool calls
+- `.claude/.env` — secrets (if needed)
+- `.claude/*.local.md` — personal hookify rules
+- `_research/` — dev notes and planning
+- `CLAUDE.local.md` — personal instruction overrides
 
 ## Audit Mode
 
@@ -132,6 +149,7 @@ For each repo, check and report in a table:
 | `_research/` exists and gitignored | both | missing or not ignored |
 | Claude gitignore entries present | all 7 entries | ~N = N entries missing |
 | Auto-skills match detected frameworks | all listed | missing or stale entries |
+| `.claude/settings.json` exists (if frameworks detected) | has file | missing |
 | `.claude/rules/framework.md` exists (if frameworks detected) | has file | missing |
 
 Print legend and summary count at the end.
