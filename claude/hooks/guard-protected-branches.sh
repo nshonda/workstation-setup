@@ -32,7 +32,7 @@ if ! echo "$CMD" | grep -qE '\bgit\s+push\b'; then
 fi
 
 # Block 1: Force push anywhere
-if echo "$CMD" | grep -qE '\bgit\s+push\b.*(-f|--force|--force-with-lease)'; then
+if echo "$CMD" | grep -qE '\bgit\s+push\b.*\s(-f|--force|--force-with-lease)(\s|$)'; then
   jq -n '{
     "hookSpecificOutput": {
       "hookEventName": "PreToolUse",
