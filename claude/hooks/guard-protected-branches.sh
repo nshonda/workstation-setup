@@ -13,7 +13,18 @@ fi
 
 # Block 0: Committing while on main/master
 if echo "$CMD" | grep -qE '\bgit\s+commit\b'; then
-  CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "unknown")
+  # Detect working directory: handle "cd <path> && git commit" and "git -C <path> commit"
+  GIT_WORKDIR=""
+  if echo "$CMD" | grep -qE '^\s*cd\s+'; then
+    GIT_WORKDIR=$(echo "$CMD" | sed -E 's|^\s*cd\s+([^ ]+)\s*&&.*|\1|')
+  elif echo "$CMD" | grep -qE 'git\s+-C\s+'; then
+    GIT_WORKDIR=$(echo "$CMD" | sed -E 's|.*git\s+-C\s+([^ ]+)\s+commit.*|\1|')
+  fi
+  if [ -n "$GIT_WORKDIR" ]; then
+    CURRENT_BRANCH=$(git -C "$GIT_WORKDIR" rev-parse --abbrev-ref HEAD 2>/dev/null || echo "unknown")
+  else
+    CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "unknown")
+  fi
   if [ "$CURRENT_BRANCH" = "main" ] || [ "$CURRENT_BRANCH" = "master" ]; then
     jq -n '{
       "hookSpecificOutput": {
@@ -59,7 +70,15 @@ fi
 
 # Bare "git push" or "git push origin" — check current branch
 if echo "$CMD" | grep -qE '^\s*git\s+push\s*$|^\s*git\s+push\s+\S+\s*$'; then
-  CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "unknown")
+  GIT_PUSH_WORKDIR=""
+  if echo "$CMD" | grep -qE '^\s*cd\s+'; then
+    GIT_PUSH_WORKDIR=$(echo "$CMD" | sed -E 's|^\s*cd\s+([^ ]+)\s*&&.*|\1|')
+  fi
+  if [ -n "$GIT_PUSH_WORKDIR" ]; then
+    CURRENT_BRANCH=$(git -C "$GIT_PUSH_WORKDIR" rev-parse --abbrev-ref HEAD 2>/dev/null || echo "unknown")
+  else
+    CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "unknown")
+  fi
   if [ "$CURRENT_BRANCH" = "main" ] || [ "$CURRENT_BRANCH" = "master" ]; then
     TARGETS_PROTECTED=true
   fi
