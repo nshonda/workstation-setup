@@ -145,8 +145,6 @@ Skills are slash commands deployed to `~/.claude/skills/`. They provide domain-s
 | api-design | REST API design patterns (resources, status codes, pagination, errors) | Custom |
 | database-migrations | Schema changes, data migrations, rollbacks, zero-downtime deploys | Custom |
 | devops-infra | Docker, CI/CD, Terraform, K8s, monitoring, deployment strategies | Custom |
-| subagent-catalog | Browse and install agents from the VoltAgent catalog | Custom |
-| clipboard | Copy commands to system clipboard for pasting into SSH sessions | Custom |
 | wrap-up | End-of-session context saving and handoff prep | Custom |
 | handoff | Create handoff documents for session/colleague transfer | Custom |
 
