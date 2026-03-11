@@ -196,6 +196,17 @@
           }
         ]
       }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node $HOME/.claude/hooks/context-monitor.js"
+          }
+        ]
+      }
     ]
   },
   "enabledPlugins": {
