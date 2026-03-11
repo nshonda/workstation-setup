@@ -72,5 +72,33 @@ If an MCP server or plugin can do the job, use it. Only fall back to CLI tools o
 - When doing research or planning for a project, save notes and findings to `_research/` as markdown files.
 - **Handoffs live in `_research/handoffs/`.** When asked about handoffs, always search the **current project's** `_research/handoffs/` first — cross-project handoffs often live where the work will be done, not the project being referenced.
 - **Override plugin defaults:** Skills/plugins that write to `docs/plans/` MUST use `_research/` instead. Never create a `docs/plans/` directory.
+- **Frontmatter convention:** When writing spec, plan, or research files to `_research/`, include YAML frontmatter. Files without frontmatter are ignored by the orchestration tracker.
+
+  ```yaml
+  # Specs (from brainstorming)
+  ---
+  type: spec
+  status: active          # planning | active | completed | archived
+  title: <descriptive title>
+  ---
+
+  # Plans (from writing-plans)
+  ---
+  type: plan
+  spec: <parent-spec-filename-stem>  # e.g. 2026-03-10-nexus-design
+  status: queued          # planning | queued | working | review | done
+  title: "Plan N: descriptive title"
+  branch: <branch-name>
+  source: jira:KEY or redmine:ID     # if from external tracker
+  ---
+
+  # Research notes
+  ---
+  type: research
+  status: active          # active | outdated | implemented
+  title: <descriptive title>
+  source: jira:KEY or redmine:ID     # if applicable
+  ---
+  ```
 
 @RTK.md
