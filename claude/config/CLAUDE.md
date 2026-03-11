@@ -70,6 +70,7 @@ If an MCP server or plugin can do the job, use it. Only fall back to CLI tools o
 - Use `_research/` at the project root for dev research notes, architecture docs, and planning context. This folder is for local development only and must always be gitignored.
 - When starting a task, read all files in `_research/` for project context — treat them as extensions of CLAUDE.md.
 - When doing research or planning for a project, save notes and findings to `_research/` as markdown files.
+- **Handoffs live in `_research/handoffs/`.** When asked about handoffs, always search the **current project's** `_research/handoffs/` first — cross-project handoffs often live where the work will be done, not the project being referenced.
 - **Override plugin defaults:** Skills/plugins that write to `docs/plans/` MUST use `_research/` instead. Never create a `docs/plans/` directory.
 
 @RTK.md
