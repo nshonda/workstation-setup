@@ -13,8 +13,9 @@ conditions:
 
 All plans, designs, research notes, and architecture docs must go to `_research/` (gitignored), not `docs/plans/`.
 
-Replace the path:
-- `docs/plans/YYYY-MM-DD-<name>.md` -> `_research/YYYY-MM-DD-<name>.md`
-- `docs/plans/` -> `_research/`
+To proceed:
+- Change the path from `docs/plans/YYYY-MM-DD-<name>.md` to `_research/YYYY-MM-DD-<name>.md`
+- Or change `docs/plans/` to `_research/`
+- Create `_research/` if needed (it's gitignored for local development only)
 
-Create `_research/` if it doesn't exist. This folder is gitignored and used for local development context only.
+Then retry the write.

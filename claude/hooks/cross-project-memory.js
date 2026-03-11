@@ -7,7 +7,8 @@ const { execFileSync } = require('child_process');
 const path = require('path');
 const fs = require('fs');
 
-const PROJECTS_DIR = path.join(process.env.HOME, '.claude', 'projects');
+const CLAUDE_DIR = process.env.CLAUDE_CONFIG_DIR || path.join(process.env.HOME, '.claude');
+const PROJECTS_DIR = path.join(CLAUDE_DIR, 'projects');
 
 const STOP_WORDS = new Set([
   'the','a','an','is','are','was','were','be','been','being','have','has','had',
@@ -25,8 +26,11 @@ const STOP_WORDS = new Set([
 ]);
 
 let input = '';
+// Timeout guard: prevent hangs when stdin pipes don't close (GSD #775)
+const stdinTimeout = setTimeout(() => process.exit(0), 3000);
 process.stdin.on('data', c => input += c);
 process.stdin.on('end', () => {
+  clearTimeout(stdinTimeout);
   try {
     if (!fs.existsSync(PROJECTS_DIR)) process.exit(0);
 
@@ -92,6 +96,45 @@ process.stdin.on('end', () => {
 
       matches.push({ project, content });
       if (matches.length >= 5) break;
+    }
+
+    // Keyword-gated _research/ search — surfaces handoff docs, design specs,
+    // architecture notes from _research/ directories across all projects.
+    // Unlike MEMORY.md, _research/ is NOT auto-loaded, so include current project.
+    const RESEARCH_KEYWORDS = /\b(handoff|hand\s+off|previous\s+session|last\s+time|pick\s+up|left\s+off|wrap\s+up|research|design|spec|architecture|prior\s+work)\b/i;
+    const WS_DIR = path.join(process.env.HOME, 'workstation');
+
+    if (RESEARCH_KEYWORDS.test(prompt) && matches.length < 5 && fs.existsSync(WS_DIR)) {
+      const searchPaths = ['personal', 'work']
+        .map(d => path.join(WS_DIR, d))
+        .filter(d => fs.existsSync(d));
+
+      if (searchPaths.length > 0) {
+        try {
+          const researchResult = execFileSync('grep', [
+            '-r', '-i', '-n', '--include=*.md',
+            '-E', pattern,
+            ...searchPaths
+          ], { encoding: 'utf8', timeout: 3000 }).trim();
+
+          const researchLines = researchResult.split('\n')
+            .filter(l => l.includes('/_research/'));
+
+          for (const line of researchLines) {
+            if (matches.length >= 5) break;
+            const projMatch = line.match(/workstation\/(?:personal|work)\/([^/]+)/);
+            if (!projMatch) continue;
+            const project = projMatch[1];
+            const isHandoff = line.includes('/_research/handoffs/');
+            const tag = isHandoff ? ' (handoff)' : ' (research)';
+            const content = line.replace(/^[^:]+:\d+:/, '').trim();
+            if (!content || content.startsWith('#') || content.length < 10) continue;
+            if (seenContent.has(content)) continue;
+            seenContent.add(content);
+            matches.push({ project: project + tag, content });
+          }
+        } catch (e) { /* no matches */ }
+      }
     }
 
     if (matches.length > 0) {

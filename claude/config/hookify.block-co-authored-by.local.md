@@ -17,4 +17,4 @@ conditions:
 Your global CLAUDE.md says:
 > NEVER add `Co-Authored-By: Claude` (or any Claude co-author line) to commit messages.
 
-Remove the Co-Authored-By trailer from the commit message and try again.
+To proceed, edit the commit message to remove the Co-Authored-By trailer and try again.
