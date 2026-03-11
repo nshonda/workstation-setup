@@ -15,11 +15,11 @@ case "$TOOL" in
   mcp__jira-basis__jira_add_worklog)
     ISSUE_KEY=$(echo "$TOOL_INPUT" | jq -r '.issueIdOrKey // empty')
     if [ -z "$ISSUE_KEY" ]; then
-      jq -n '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"block","permissionDecisionReason":"Missing issueIdOrKey. Cannot update a Jira issue without specifying which one."}}'
+      jq -n '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"block","permissionDecisionReason":"Missing issueIdOrKey — no issue specified. Provide the issue key (e.g., PROJ-123) to proceed."}}'
       exit 0
     fi
     if ! echo "$ISSUE_KEY" | grep -qE '^[A-Z][A-Z0-9]+-[0-9]+$'; then
-      jq -n --arg key "$ISSUE_KEY" '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"block","permissionDecisionReason":"Invalid issue key format: \($key). Expected PROJ-123 format."}}'
+      jq -n --arg key "$ISSUE_KEY" '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"block","permissionDecisionReason":"Invalid issue key format: \($key) — expected PROJ-123 format. Check the key and try again."}}'
       exit 0
     fi
     ;;
@@ -28,7 +28,7 @@ case "$TOOL" in
     PATH_VAL=$(echo "$TOOL_INPUT" | jq -r '.path // empty')
     if [ "$METHOD" = "PUT" ] || [ "$METHOD" = "DELETE" ]; then
       if ! echo "$PATH_VAL" | grep -qE '/[0-9]+\.json$'; then
-        jq -n --arg p "$PATH_VAL" '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"block","permissionDecisionReason":"Destructive Redmine request to path without numeric ID: \($p). Verify the resource exists first."}}'
+        jq -n --arg p "$PATH_VAL" '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"block","permissionDecisionReason":"Destructive Redmine request to path without numeric ID: \($p) — verify the resource exists and provide a valid ID before retrying."}}'
         exit 0
       fi
     fi

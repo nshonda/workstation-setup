@@ -11,4 +11,6 @@ conditions:
 
 **Check: Is `_research/` in `.gitignore`?**
 
-The `_research/` folder is for local development only and must always be gitignored. Before continuing, verify that `.gitignore` contains `_research/`. If it doesn't, add it now.
+The `_research/` folder is for local development only and should always be gitignored. Please verify that `.gitignore` contains `_research/`. If not, consider adding it before proceeding.
+
+(This is a warning, not a blocker — you can continue, but the folder won't be protected from accidental commits without this entry.)

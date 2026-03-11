@@ -17,10 +17,10 @@ action: block
 Your global CLAUDE.md says:
 > NEVER add promotional text like "Generated with Claude Code", "Written by Claude", or any self-attribution to commit messages, PR descriptions, code comments, or any output.
 
-Remove the self-promotional text before running this command. This includes:
+To proceed, remove the self-promotional text from this command. This includes:
 - "Generated with Claude Code" footers
 - "Written by Claude" attributions
 - "Co-Authored-By: Claude" lines
 - Any Claude self-attribution emoji/links
 
-The code-review plugin template includes this text by default — strip it.
+Note: The code-review plugin template includes this text by default — check for it.

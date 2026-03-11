@@ -13,8 +13,8 @@ conditions:
 
 Your global CLAUDE.md says credentials must be stored in the system credential store (macOS Keychain / gnome-keyring), never hardcoded.
 
-What was detected looks like a hardcoded secret, API key, or password. Instead:
-- Use environment variables via direnv (`.envrc`)
+What was detected looks like a hardcoded secret, API key, or password. To resolve this:
+- Consider using environment variables via direnv (`.envrc`)
 - Pull from the system credential store
 - Reference via `$VARIABLE_NAME` instead of inline values
 - If this is example/placeholder text, use obviously fake values like `your-api-key-here`

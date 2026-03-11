@@ -14,4 +14,4 @@ conditions:
 Your global CLAUDE.md says:
 > NEVER add promotional text like "Generated with Claude Code", "Written by Claude", or any self-attribution to commit messages, PR descriptions, code comments, or any output.
 
-Remove the self-promotional text before writing this file.
+To proceed, edit the file to remove self-promotional text, then retry the write.
