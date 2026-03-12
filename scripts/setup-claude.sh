@@ -304,18 +304,53 @@ echo "Updated ~/.claude.json"
 echo ""
 echo "--- Installing plugins ---"
 
+# Plugins that should be enabled
+ENABLED_PLUGINS=(
+    "claude-code-setup@claude-plugins-official"
+    "claude-md-management@claude-plugins-official"
+    "code-review@claude-plugins-official"
+    "commit-commands@claude-plugins-official"
+    "feature-dev@claude-plugins-official"
+    "frontend-design@claude-plugins-official"
+    "github@claude-plugins-official"
+    "hookify@claude-plugins-official"
+    "pr-review-toolkit@claude-plugins-official"
+    "security-guidance@claude-plugins-official"
+    "superpowers@claude-plugins-official"
+    "openbrowser@openbrowser-ai"
+)
+
+# Plugins installed but disabled (available for manual enabling)
+DISABLED_PLUGINS=(
+    "code-simplifier@claude-plugins-official"
+    "php-lsp@claude-plugins-official"
+    "supabase@claude-plugins-official"
+    "typescript-lsp@claude-plugins-official"
+)
+
 if command -v claude &>/dev/null; then
-    claude plugins add anthropics/claude-plugins-official 2>/dev/null || true
-    claude plugins add anthropics/skills 2>/dev/null || true
-    claude plugins install document-skills@anthropic-agent-skills 2>/dev/null || true
-    claude plugins install example-skills@anthropic-agent-skills 2>/dev/null || true
+    # Add marketplaces
+    claude plugins marketplace add anthropics/claude-plugins-official 2>/dev/null || true
+    claude plugins marketplace add billy-enrizky/openbrowser-ai 2>/dev/null || true
+
+    # Remove stale marketplaces
+    claude plugins marketplace remove pro-workflow 2>/dev/null || true
+
+    # Install and enable plugins
+    for plugin in "${ENABLED_PLUGINS[@]}"; do
+        claude plugins install "$plugin" 2>/dev/null || true
+        claude plugins enable "$plugin" 2>/dev/null || true
+    done
+
+    # Install but disable optional plugins
+    for plugin in "${DISABLED_PLUGINS[@]}"; do
+        claude plugins install "$plugin" 2>/dev/null || true
+        claude plugins disable "$plugin" 2>/dev/null || true
+    done
+
     echo "Plugins installed"
 else
-    echo "Claude Code CLI not found — install it first, then run:"
-    echo "  claude plugins add anthropics/claude-plugins-official"
-    echo "  claude plugins add anthropics/skills"
-    echo "  claude plugins install document-skills@anthropic-agent-skills"
-    echo "  claude plugins install example-skills@anthropic-agent-skills"
+    echo "Claude Code CLI not found — install it first, then run this script again"
 fi
 
 # ---------- 8. Create direnv .envrc files ----------
