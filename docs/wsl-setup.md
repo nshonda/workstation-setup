@@ -35,6 +35,10 @@ npm install -g @anthropic-ai/claude-code
 
 Run it from your WSL terminal. Your `~/workstation/` directory lives inside the WSL filesystem for best performance.
 
+## Fonts
+
+The shell setup (`setup-shell.sh`) installs JetBrainsMono Nerd Font inside WSL. If `/mnt/c` is detected, it automatically copies the font files to your Windows user's local font directory (`AppData/Local/Microsoft/Windows/Fonts`). Set `JetBrainsMono Nerd Font` in Windows Terminal → Settings → Profile → Appearance → Font face.
+
 ## Accessing WSL Files from Windows
 
 WSL files are at `\\wsl$\Ubuntu\home\<user>\` in Windows Explorer, but avoid editing them from Windows — always work inside WSL for Git to work correctly.

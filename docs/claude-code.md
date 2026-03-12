@@ -79,6 +79,8 @@ Hooks are shell scripts that run before or after Claude Code tool calls. They in
 | `slack-schedule-rewrite.sh` | PreToolUse:Slack MCP | `slack_send_message` adds "Sent using Claude" server-side (can't be stripped). This rewrites it to `slack_schedule_message` (+120s) which doesn't add attribution. |
 | `validate-mcp-inputs.sh` | PreToolUse:Jira/Redmine MCP | Validates inputs before mutating operations (update issue, transition, add comment, add worklog) to catch bad data before it hits the API. |
 | `rtk-rewrite.sh` | PreToolUse:Bash | Transparently rewrites CLI commands through [RTK](https://github.com/rtk-ai/rtk) proxy for 60-90% token savings on command output. |
+| `guard-protected-branches.sh` | PreToolUse:Bash | Blocks commits on main/master and all force-push operations. Hard deny — forces feature-branch workflow. |
+| `context-monitor.js` | PostToolUse | Monitors context window usage and injects warnings at 35% remaining (warning) and 25% remaining (critical). Debounced to avoid noise. |
 | `cross-project-memory.js` | UserPromptSubmit | Surfaces relevant past learnings from the memory system at conversation start, providing cross-project context. |
 
 ## Hookify Rules
@@ -147,6 +149,8 @@ Skills are slash commands deployed to `~/.claude/skills/`. They provide domain-s
 | devops-infra | Docker, CI/CD, Terraform, K8s, monitoring, deployment strategies | Custom |
 | wrap-up | End-of-session context saving and handoff prep | Custom |
 | handoff | Create handoff documents for session/colleague transfer | Custom |
+| init-project | Post-`/init` setup: framework detection, skill injection, `_research/` scaffolding, `--audit` mode | Custom |
+| research-to-issues | Convert `_research/` future work items into self-contained GitHub issues | Custom |
 
 ## Specialist Agents
 
