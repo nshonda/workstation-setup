@@ -57,12 +57,12 @@ scripts/
   setup-gh.sh               # GitHub CLI multi-account auth
   setup-claude.sh           # Claude Code setup (MCP, config, skills, plugins)
   install-commands.sh        # gh auto-switch wrapper
-  init-project-claude.sh   # Bootstrap Claude Code for a project (--audit to scan all)
+  init-project-claude.sh   # Bootstrap Claude Code for a project (--audit to scan, --audit --fix to auto-repair)
 claude/                     # Claude Code config source (deployed to ~/.claude/)
   config/                   # CLAUDE.md, settings.json, hookify rules
   skills/                   # Slash commands (22 skills)
   agents/                   # Specialist subagents (architect-reviewer, mcp-developer)
-  hooks/                    # PreToolUse/SessionStart scripts (6 hooks)
+  hooks/                    # PreToolUse/PostToolUse/SessionStart scripts (8 hooks)
 docs/
   claude-code.md            # Claude Code setup architecture and reference
   ssh-github-multi-account.md

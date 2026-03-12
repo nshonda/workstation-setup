@@ -17,7 +17,7 @@ cp config.env.example config.env # Configure once
 ./scripts/setup-gh.sh           # GitHub CLI multi-account auth
 ./scripts/setup-claude.sh       # Claude Code: MCP, config, skills, plugins
 ./scripts/install-commands.sh   # Shell gh() auto-switch wrapper
-init-project-claude             # Bootstrap Claude Code for a project (or --audit to scan all)
+init-project-claude             # Bootstrap Claude Code for a project (--audit to scan, --audit --fix to auto-repair)
 ```
 
 ## Architecture
