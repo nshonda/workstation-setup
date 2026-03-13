@@ -112,6 +112,10 @@
           },
           {
             "type": "command",
+            "command": "$HOME/.claude/hooks/verify-before-commit.sh"
+          },
+          {
+            "type": "command",
             "command": "$HOME/.claude/hooks/rtk-rewrite.sh"
           }
         ]
@@ -207,6 +211,15 @@
           {
             "type": "command",
             "command": "node $HOME/.claude/hooks/context-monitor.js"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/track-verification.sh"
           }
         ]
       }

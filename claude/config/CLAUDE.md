@@ -104,4 +104,35 @@ If an MCP server or plugin can do the job, use it. Only fall back to CLI tools o
   ---
   ```
 
+## Decision Memory
+
+Architectural decisions persist in `.decisions/` at the project root so agents across sessions can learn from past choices.
+
+- **Before making architectural choices** (library selection, pattern choice, API design, data model), read all files in `.decisions/`
+- **After making a decision**, write it to `.decisions/<date>-<topic>.md` using this format:
+
+  ```markdown
+  ---
+  type: decision
+  status: active          # active | superseded
+  date: YYYY-MM-DD
+  supersedes: <filename>  # if replacing a prior decision
+  ---
+
+  # <Decision Title>
+
+  **Context:** Why this decision was needed.
+
+  **Alternatives considered:**
+  - Option A — why not
+  - Option B — why not
+
+  **Decision:** What was chosen.
+
+  **Why:** The reasoning.
+  ```
+
+- `.decisions/` is git-tracked in personal repos, gitignored in work repos — each repo decides via its own `.gitignore`
+- Decision files are append-only in spirit — to reverse a decision, write a new one with `supersedes:` pointing to the old file and set the old file's status to `superseded`
+
 @RTK.md

@@ -102,6 +102,7 @@ process.stdin.on('end', () => {
     // architecture notes from _research/ directories across all projects.
     // Unlike MEMORY.md, _research/ is NOT auto-loaded, so include current project.
     const RESEARCH_KEYWORDS = /\b(handoff|hand\s+off|previous\s+session|last\s+time|pick\s+up|left\s+off|wrap\s+up|research|design|spec|architecture|prior\s+work)\b/i;
+    const DECISION_KEYWORDS = /\b(decision|decided|chose|why\s+did\s+we|architectural)\b/i;
     const WS_DIR = path.join(process.env.HOME, 'workstation');
 
     if (RESEARCH_KEYWORDS.test(prompt) && matches.length < 5 && fs.existsSync(WS_DIR)) {
@@ -132,6 +133,38 @@ process.stdin.on('end', () => {
             if (seenContent.has(content)) continue;
             seenContent.add(content);
             matches.push({ project: project + tag, content });
+          }
+        } catch (e) { /* no matches */ }
+      }
+    }
+
+    // Decision memory search — surfaces .decisions/ files across all projects
+    if (DECISION_KEYWORDS.test(prompt) && matches.length < 5 && fs.existsSync(WS_DIR)) {
+      const decisionPaths = ['personal', 'work']
+        .map(d => path.join(WS_DIR, d))
+        .filter(d => fs.existsSync(d));
+
+      if (decisionPaths.length > 0) {
+        try {
+          const decisionResult = execFileSync('grep', [
+            '-r', '-i', '-n', '--include=*.md',
+            '-E', pattern,
+            ...decisionPaths
+          ], { encoding: 'utf8', timeout: 3000 }).trim();
+
+          const decisionLines = decisionResult.split('\n')
+            .filter(l => l.includes('/.decisions/'));
+
+          for (const line of decisionLines) {
+            if (matches.length >= 5) break;
+            const projMatch = line.match(/workstation\/(?:personal|work)\/([^/]+)/);
+            if (!projMatch) continue;
+            const project = projMatch[1];
+            const content = line.replace(/^[^:]+:\d+:/, '').trim();
+            if (!content || content.startsWith('#') || content.startsWith('---') || content.length < 10) continue;
+            if (seenContent.has(content)) continue;
+            seenContent.add(content);
+            matches.push({ project: project + ' (decision)', content });
           }
         } catch (e) { /* no matches */ }
       }
