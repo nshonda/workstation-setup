@@ -31,7 +31,6 @@ Read dependency files and directory structure in the project root. Check one lev
 |------------|----------|
 | `silverstripe/*` | `ss-dev` |
 | `roots/sage` or `roots/bedrock` or `wpackagist-*` | `wp-dev` |
-| `laravel/framework` or `laravel/laravel` | `laravel-dev` |
 
 **Directory structure:**
 
@@ -113,7 +112,6 @@ Map each skill to its trigger context:
 | `next-best-practices` | For Next.js files |
 | `vercel-react-best-practices` | For React components |
 | `supabase-postgres-best-practices` | For database queries and Supabase usage |
-| `laravel-dev` | For Laravel PHP files |
 | `devops-infra` | For infrastructure and deployment files |
 
 ### 6. Create .claude/settings.json

@@ -1,6 +1,6 @@
 ---
 name: wp-dev
-description: WordPress plugin and theme development helper. Use when working on WordPress projects to follow WP coding standards and hook-based architecture.
+description: Use when working in a WordPress project (wp-content/, functions.php, or wpackagist dependencies). Covers WP coding standards, hooks, theme and plugin development.
 ---
 
 # WordPress Development Helper
@@ -88,5 +88,4 @@ function child_enqueue_styles() {
 - Never write raw SQL without `$wpdb->prepare()`
 - jQuery-based JS unless the project explicitly uses modern tooling
 - Check if the project has a build step before assuming CSS preprocessors exist
-- WP Engine deployment: no build step on server, commit compiled assets
-- When generating Redmine markdown, use Textile formatting (inherited from global CLAUDE.md)
+- Check project's CLAUDE.md for hosting-specific deployment rules (e.g., whether compiled assets should be committed)

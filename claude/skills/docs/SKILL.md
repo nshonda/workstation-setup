@@ -1,6 +1,6 @@
 ---
 name: docs
-description: Use when asked to write documentation, document changes, update README, write release notes, create ADRs, add changelog entries, or write any project docs. Also use when "document", "docs", "write up", "summarize changes", or "explain this" appears in the request.
+description: Use when asked to write documentation, document changes, update README, write release notes, create ADRs, add changelog entries, or write any project docs. Also use when "document", "docs", "write up", or "summarize changes" appears in the request.
 ---
 
 # Documentation

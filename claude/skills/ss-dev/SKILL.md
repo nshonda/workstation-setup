@@ -1,6 +1,6 @@
 ---
 name: ss-dev
-description: SilverStripe development helper for SS3, SS4, and SS5 projects. Use when working on any SilverStripe CMS project to generate code following correct patterns for that version.
+description: Use when working in a project with silverstripe/* dependencies. Covers SS3, SS4, and SS5 patterns — DataObjects, templates, CMS fields, and ORM queries.
 ---
 
 # SilverStripe Development Helper
@@ -78,7 +78,7 @@ Read the project's CLAUDE.md for:
 - Which SS version this project uses
 - Theme structure and naming
 - Custom module patterns
-- Multi-tenant/multi-domain setup (especially ss3 project)
+- Multi-tenant/multi-domain setup (if applicable)
 - Extension registration patterns
 
 ## Key Rules

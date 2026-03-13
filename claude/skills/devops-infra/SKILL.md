@@ -1,6 +1,6 @@
 ---
 name: devops-infra
-description: "Senior-level DevOps and infrastructure engineering covering Docker, CI/CD, cloud platforms, monitoring, alerting, and deployment strategies. Use this skill whenever building Dockerfiles, docker-compose configs, CI/CD pipelines, Terraform/IaC, Kubernetes manifests, Nginx configs, deployment scripts, monitoring setup, or any infrastructure code. Also trigger when discussing deployment strategies, scaling, observability, secrets management, SSL/TLS, load balancing, or when the user mentions Docker, K8s, AWS, GCP, GitHub Actions, GitLab CI, Terraform, Ansible, Prometheus, Grafana, or any DevOps tool."
+description: Use when building Dockerfiles, docker-compose configs, CI/CD pipelines, Terraform/IaC, Kubernetes manifests, Nginx configs, deployment scripts, or monitoring setup. Also use for deployment strategies, scaling, observability, and secrets management.
 ---
 
 # DevOps & Infrastructure — Senior Engineer Standards
@@ -127,4 +127,3 @@ CMD ["node", "dist/main.js"]
 - Reverse proxy (Nginx/Traefik/Caddy) in front of application servers.
 - Network segmentation: public subnet for LB, private subnet for app and DB.
 
-For cloud-specific patterns and Kubernetes configs, see `references/patterns.md`.
