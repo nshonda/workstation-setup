@@ -1,6 +1,6 @@
 ---
 name: research
-description: 6-agent parallel deep research. Use when the user needs thorough investigation of a codebase question, architecture decision, or implementation approach. Launches explore agents, then 6 research agents with consensus analysis.
+description: Use when the user needs thorough investigation of a codebase question, architecture decision, or implementation approach that requires exploring multiple angles in parallel.
 ---
 
 # 6-Agent Parallel Research

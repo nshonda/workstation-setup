@@ -1,6 +1,6 @@
 ---
 name: nuxt-dev
-description: Nuxt 3/4 development helper. Use when working on Nuxt projects to follow framework conventions, composable patterns, and SSR best practices.
+description: Use when working in a project with nuxt.config.ts or Nuxt dependencies detected. Covers Nuxt 3/4 conventions, composable patterns, and SSR best practices.
 ---
 
 # Nuxt Development Helper
@@ -101,8 +101,7 @@ Read the project's CLAUDE.md for:
 
 ## Key Rules
 
-- Use `pnpm` as package manager (all current Nuxt projects use it)
-- Run `pnpm run codegen` after GraphQL schema changes (if Contentful is used)
+- Detect package manager from lock file (`pnpm-lock.yaml`, `yarn.lock`, or `package-lock.json`)
 - PascalCase for component file names
-- Never use `console.log` — it's an ESLint error in these projects
-- Check if the project has `vuejs-accessibility` ESLint rules before generating templates
+- Check project's ESLint config for `console.log` rules and `vuejs-accessibility` rules before generating code
+- Check project's CLAUDE.md for CMS-specific codegen commands (e.g., GraphQL schema generation)
