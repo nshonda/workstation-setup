@@ -304,46 +304,33 @@ echo "Updated ~/.claude.json"
 echo ""
 echo "--- Installing plugins ---"
 
-# Plugins that should be enabled
-ENABLED_PLUGINS=(
-    "claude-code-setup@claude-plugins-official"
-    "claude-md-management@claude-plugins-official"
-    "code-review@claude-plugins-official"
-    "commit-commands@claude-plugins-official"
-    "feature-dev@claude-plugins-official"
-    "frontend-design@claude-plugins-official"
-    "github@claude-plugins-official"
-    "hookify@claude-plugins-official"
-    "pr-review-toolkit@claude-plugins-official"
-    "security-guidance@claude-plugins-official"
-    "superpowers@claude-plugins-official"
-    "openbrowser@openbrowser-ai"
-)
+# Read plugin config from shared plugins.json (single source of truth)
+PLUGINS_JSON="$CLAUDE_DIR/config/plugins.json"
 
-# Plugins installed but disabled (available for manual enabling)
-DISABLED_PLUGINS=(
-    "code-simplifier@claude-plugins-official"
-    "php-lsp@claude-plugins-official"
-    "supabase@claude-plugins-official"
-    "typescript-lsp@claude-plugins-official"
-)
+if [[ ! -f "$PLUGINS_JSON" ]]; then
+    echo "ERROR: $PLUGINS_JSON not found"
+    exit 1
+fi
 
 if command -v claude &>/dev/null; then
     # Add marketplaces
-    claude plugins marketplace add anthropics/claude-plugins-official 2>/dev/null || true
-    claude plugins marketplace add billy-enrizky/openbrowser-ai 2>/dev/null || true
+    jq -r '.marketplaces[].source' "$PLUGINS_JSON" | while read -r source; do
+        claude plugins marketplace add "$source" 2>/dev/null || true
+    done
 
     # Remove stale marketplaces
-    claude plugins marketplace remove pro-workflow 2>/dev/null || true
+    jq -r '.stale_marketplaces[]' "$PLUGINS_JSON" | while read -r name; do
+        claude plugins marketplace remove "$name" 2>/dev/null || true
+    done
 
     # Install and enable plugins
-    for plugin in "${ENABLED_PLUGINS[@]}"; do
+    jq -r '.enabled[]' "$PLUGINS_JSON" | while read -r plugin; do
         claude plugins install "$plugin" 2>/dev/null || true
         claude plugins enable "$plugin" 2>/dev/null || true
     done
 
     # Install but disable optional plugins
-    for plugin in "${DISABLED_PLUGINS[@]}"; do
+    jq -r '.disabled[]' "$PLUGINS_JSON" | while read -r plugin; do
         claude plugins install "$plugin" 2>/dev/null || true
         claude plugins disable "$plugin" 2>/dev/null || true
     done
