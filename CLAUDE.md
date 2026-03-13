@@ -16,6 +16,7 @@ cp config.env.example config.env # Configure once
 ./scripts/setup-git.sh          # Git identity + conditional includes
 ./scripts/setup-gh.sh           # GitHub CLI multi-account auth
 ./scripts/setup-claude.sh       # Claude Code: MCP, config, skills, plugins
+./scripts/sync-claude.sh        # Quick sync: config, hooks, skills, agents only
 ./scripts/install-commands.sh   # Shell gh() auto-switch wrapper
 init-project-claude             # Bootstrap Claude Code for a project (--audit to scan, --audit --fix to auto-repair)
 ```
@@ -43,6 +44,7 @@ scripts/
   setup-git.sh              # Git identity + conditional includes
   setup-gh.sh               # GitHub CLI multi-account auth
   setup-claude.sh           # Claude Code setup (MCP, config, skills, plugins)
+  sync-claude.sh            # Quick sync: config, hooks, skills, agents only
   install-commands.sh       # gh auto-switch wrapper
   init-project-claude.sh   # Bootstrap Claude Code for a project (--audit to scan all)
 claude/
@@ -62,6 +64,10 @@ claude/
     slack-schedule-rewrite.sh # Rewrite send_message -> schedule_message to avoid attribution
     validate-mcp-inputs.sh   # Validate MCP tool inputs before execution
     rtk-rewrite.sh           # Rewrite CLI commands through RTK proxy
+    verify-before-commit.sh  # Block commit without passing tests/typecheck
+    track-verification.sh    # Track successful test/typecheck runs
+    guard-protected-branches.sh # Block commits/pushes on main/master
+    context-monitor.js       # Context window usage warnings
     cross-project-memory.js  # Surface past learnings on session start
 docs/
   ssh-github-multi-account.md
