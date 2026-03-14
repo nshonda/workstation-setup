@@ -42,16 +42,30 @@ if ! echo "$CMD" | grep -qE '\bgit\s+push\b'; then
   exit 0
 fi
 
-# Block 1: Force push anywhere
-if echo "$CMD" | grep -qE '\bgit\s+push\b.*\s(-f|--force|--force-with-lease)(\s|$)'; then
+# Block 1: Force push — allow --force-with-lease on non-protected branches, block all others
+if echo "$CMD" | grep -qE '\bgit\s+push\b.*\s(-f|--force)(\s|$)' && ! echo "$CMD" | grep -qE '\bgit\s+push\b.*--force-with-lease'; then
   jq -n '{
     "hookSpecificOutput": {
       "hookEventName": "PreToolUse",
       "permissionDecision": "deny",
-      "permissionDecisionReason": "BLOCKED: Force push is not allowed. Use a regular push or create a PR instead."
+      "permissionDecisionReason": "BLOCKED: Force push (--force) is not allowed. Use --force-with-lease for rebased branches or a regular push."
     }
   }'
   exit 0
+fi
+
+# Block --force-with-lease to protected branches
+if echo "$CMD" | grep -qE '\bgit\s+push\b.*--force-with-lease'; then
+  if echo "$CMD" | grep -qE '\bgit\s+push\b.*\b(main|master)\b'; then
+    jq -n '{
+      "hookSpecificOutput": {
+        "hookEventName": "PreToolUse",
+        "permissionDecision": "deny",
+        "permissionDecisionReason": "BLOCKED: Force push to main/master is not allowed, even with --force-with-lease."
+      }
+    }'
+    exit 0
+  fi
 fi
 
 # Block 2: Push directly to main or master
